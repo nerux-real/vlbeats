@@ -12,21 +12,23 @@ jobs:
     - name: Setup MSVC
       uses: ilammy/msvc-dev-cmd@v1
 
-    - name: Download SDL2
+    - name: Download SDL2 + SDL2_mixer
       run: |
         curl -LO https://www.libsdl.org/release/SDL2-devel-2.30.0-VC.zip
+        curl -LO https://github.com/libsdl-org/SDL_mixer/releases/download/release-2.8.0/SDL2_mixer-devel-2.8.0-VC.zip
         tar -xf SDL2-devel-2.30.0-VC.zip
+        tar -xf SDL2_mixer-devel-2.8.0-VC.zip
 
-    - name: Fix SDL2 include folder for #include <SDL2/...>
+    - name: Fix include folders
       run: |
         mkdir SDL2-2.30.0/include/SDL2
         move SDL2-2.30.0/include/*.h SDL2-2.30.0/include/SDL2/
+        mkdir SDL2_mixer-2.8.0/include/SDL2
+        move SDL2_mixer-2.8.0/include/*.h SDL2_mixer-2.8.0/include/SDL2/
 
     - name: Build
       run: |
-        cl /EHsc /I SDL2-2.30.0/include *.cpp ^
-          SDL2-2.30.0/lib/x64/SDL2.lib ^
-          SDL2-2.30.0/lib/x64/SDL2main.lib
+        cl /EHsc /I SDL2-2.30.0/include /I SDL2_mixer-2.8.0/include *.cpp SDL2-2.30.0/lib/x64/SDL2.lib SDL2-2.30.0/lib/x64/SDL2main.lib SDL2_mixer-2.8.0/lib/x64/SDL2_mixer.lib
 
     - name: Upload EXE
       uses: actions/upload-artifact@v4
