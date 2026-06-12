@@ -1,0 +1,25 @@
+name: Build Windows EXE
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install SDL2
+      run: |
+        curl -LO https://www.libsdl.org/release/SDL2-devel-2.30.0-VC.zip
+        tar -xf SDL2-devel-2.30.0-VC.zip
+
+    - name: Build
+      run: |
+        cl /EHsc /I SDL2-2.30.0/include *.cpp SDL2-2.30.0/lib/x64/SDL2.lib SDL2-2.30.0/lib/x64/SDL2main.lib
+
+    - name: Upload EXE
+      uses: actions/upload-artifact@v3
+      with:
+        name: game
+        path: "*.exe"
