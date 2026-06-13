@@ -236,8 +236,8 @@ bool Game::init(){
     m_skins.loadSkin(0, m_window.getRenderer()); //default pirmo
     m_debug.init(m_skins.getActive().m_fontUI, m_window.getRenderer());
     m_debug.hook();
-    m_discordRPC.init("1515437675111387178");
-    m_discordRPC.update("In Menus", "Browsing songs");
+    //m_discordRPC.init("1515437675111387178");
+    //m_discordRPC.update("In Menus", "Browsing songs");
     m_lastTick=SDL_GetPerformanceCounter();
     m_loading=false;
     m_running=true;
@@ -281,10 +281,10 @@ void Game::startGame(const std::string &path, const std::string &difficulty){
     }
     m_mapDuration += 3000.0f;
 
-    m_discordRPC.update(
-        m_beatmap.name + " [" + difficulty + "]",
-        "Playing"
-    );
+    // m_discordRPC.update(
+    //     m_beatmap.name + " [" + difficulty + "]",
+    //     "Playing"
+    // );
 
     if(m_previewPlaying){
         Mix_FadeOutMusic(300);
@@ -852,10 +852,10 @@ void Game::endMap(){
     m_judgmentTimer = 0.0f;
     int accInt = (int)getAccuracy();
     std::string grade = getGrade();
-    m_discordRPC.update(
-        m_beatmap.name + " [" + m_songList[m_selectedSong].difficulties[m_selectedDifficulty] + "]",
-        std::to_string(accInt) + "% - " + grade + " Grade"
-    );
+    // m_discordRPC.update(
+    //     m_beatmap.name + " [" + m_songList[m_selectedSong].difficulties[m_selectedDifficulty] + "]",
+    //     std::to_string(accInt) + "% - " + grade + " Grade"
+    // );
     m_state = GameState::Results;
 }
 
@@ -893,7 +893,7 @@ void Game::run(){
         }
 
         m_debug.render(renderer);
-        m_discordRPC.runCallbacks();
+        //m_discordRPC.runCallbacks();
         renderFPSCounter();
         SDL_RenderPresent(renderer);
         m_fpsCount++;
@@ -914,11 +914,11 @@ void Game::backToSongSelect(){
     m_displayPoints = 0.0f;
     m_hitErrors.clear();
     m_state = GameState::SongSelectMenu;
-    m_discordRPC.update("In Menus", "Browsing songs");
+    //m_discordRPC.update("In Menus", "Browsing songs");
 }
 
 void Game::shutdown(){
-    m_discordRPC.shutdown();
+    //m_discordRPC.shutdown();
     for(auto& pair:m_letterTextures) SDL_DestroyTexture(pair.second);
     SDL_DestroyTexture(m_judgmentTexture);
     SDL_DestroyTexture(m_comboTexture);

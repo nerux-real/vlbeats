@@ -14,7 +14,7 @@ add_executable(Lonkstalk
     ParticleSystem.cpp
     Settings.cpp
     Skins.cpp
-    DiscordRPC.cpp
+    # DiscordRPC.cpp
     miniz.c
 )
 

@@ -1,4 +1,4 @@
-name: Windows x64 Build
+name: Windows x64 Build (CMake)
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Setup MSVC x64
+    - name: Setup MSVC (x64)
       uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: x64
@@ -20,7 +20,7 @@ jobs:
     - name: Setup vcpkg
       uses: lukka/run-vcpkg@v11
 
-    - name: Install SDL packages
+    - name: Install SDL dependencies
       shell: pwsh
       run: |
         vcpkg install sdl2:x64-windows
@@ -29,7 +29,7 @@ jobs:
         vcpkg install sdl2-ttf:x64-windows
         vcpkg install sdl2-gfx:x64-windows
 
-    - name: Configure
+    - name: Configure CMake
       shell: pwsh
       run: |
         cmake -B build `
@@ -39,23 +39,19 @@ jobs:
 
     - name: Build
       shell: pwsh
-      run: |
-        cmake --build build --config Release
+      run: cmake --build build --config Release
 
-    - name: Copy DLLs
+    - name: Collect DLLs
       shell: pwsh
       run: |
-        $dlls = Get-ChildItem "$env:VCPKG_INSTALLATION_ROOT\installed\x64-windows\bin\*.dll"
+        mkdir out
+        Copy-Item build\Release\*.exe out\
 
-        foreach($dll in $dlls)
-        {
-          Copy-Item $dll.FullName build\Release\
-        }
+        # copy vcpkg DLLs
+        Copy-Item $env:VCPKG_INSTALLATION_ROOT\installed\x64-windows\bin\*.dll out\
 
-    - name: Upload Artifact
+    - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: Lonkstalk-Windows-x64
-        path: |
-          build/Release/Lonkstalk.exe
-          build/Release/*.dll
+        name: Lonkstalk-windows-x64
+        path: out/*
