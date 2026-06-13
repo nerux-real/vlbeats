@@ -22,4 +22,5 @@ public:
     void loadMetaFromLk(const char *lkPath);
     void unloadMap();
     void loadSongOnly(const char *lkPath);
+    void loadBackgroundOnly(const char *lkPath);
 };

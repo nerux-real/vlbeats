@@ -212,3 +212,37 @@ void Beatmap::loadSongOnly(const char* lkPath){
     }
     mz_zip_reader_end(&zip);
 }
+
+void Beatmap::loadBackgroundOnly(const char* lkPath){
+    mz_zip_archive zip = {};
+    if(!mz_zip_reader_init_file(&zip, lkPath, 0)) return;
+
+    size_t metaSize = 0;
+    void* metaData = mz_zip_reader_extract_file_to_heap(&zip, "metadata.txt", &metaSize, 0);
+    if(metaData){
+        std::istringstream ss(std::string((char*)metaData, metaSize));
+        std::string line;
+        while(getline(ss, line)){
+            size_t colon = line.find(':');
+            if(colon == std::string::npos) continue;
+            std::string key = line.substr(0, colon);
+            std::string value = line.substr(colon + 2);
+            if(key == "bg") bg_filename = value;
+        }
+        mz_free(metaData);
+    }
+
+    if(bg_filename.empty()){ mz_zip_reader_end(&zip); return; }
+
+    size_t bgSize = 0;
+    void* bgData = mz_zip_reader_extract_file_to_heap(&zip, bg_filename.c_str(), &bgSize, 0);
+    if(bgData){
+        std::string bgPath = "/tmp/menu_bg_" + std::to_string(std::hash<std::string>{}(lkPath)) + ".png";
+        FILE* f = fopen(bgPath.c_str(), "wb");
+        fwrite(bgData, 1, bgSize, f);
+        fclose(f);
+        mz_free(bgData);
+        bg_path = bgPath;
+    }
+    mz_zip_reader_end(&zip);
+}

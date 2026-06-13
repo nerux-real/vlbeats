@@ -202,6 +202,20 @@ void Game::renderTimerDisplay(){
     SDL_DestroyTexture(tt);
 }
 
+void Game::renderFPSCounter(){
+    SDL_Renderer* renderer = m_window.getRenderer();
+    if(!m_skins.getActive().m_fontUI) return;
+    std::string fpsStr = "FPS: " + std::to_string(m_fps);
+    SDL_Surface* fs = TTF_RenderText_Solid(m_skins.getActive().m_fontUI, fpsStr.c_str(), {100,255,100,255});
+    SDL_Texture* ft = SDL_CreateTextureFromSurface(renderer, fs);
+    int fw, fh;
+    SDL_QueryTexture(ft, nullptr, nullptr, &fw, &fh);
+    SDL_Rect fdst = {m_settings.resWidth - fw - 20, m_settings.resHeight - fh - 20, fw, fh};
+    SDL_RenderCopy(renderer, ft, nullptr, &fdst);
+    SDL_FreeSurface(fs);
+    SDL_DestroyTexture(ft);
+}
+
 bool Game::init(){
     m_settings.load("settings.ini");
     m_loading=true;
@@ -247,6 +261,8 @@ void Game::scanBeatmaps(){
         song.author    = temp.author;
         song.bpm       = temp.bpm;
         song.difficulties = temp.difficulties;
+        temp.loadBackgroundOnly(entry.path().string().c_str());
+        song.bgPath = temp.bg_path;
         m_songList.push_back(song);
     }
     std::cout<<"Found "<<m_songList.size()<<" beatmaps"<<std::endl;
@@ -371,6 +387,18 @@ void Game::updateSongSelectMenu(float deltaMs){
             Mix_FadeOutMusic(300);
             m_previewPlaying = false;
         }
+
+        if(m_menuBgTexture){ SDL_DestroyTexture(m_menuBgTexture); m_menuBgTexture = nullptr; }
+        Beatmap temp;
+        temp.loadBackgroundOnly(m_songList[m_selectedSong].lkPath.c_str());
+        if(!temp.bg_path.empty()){
+            SDL_Surface* s = IMG_Load(temp.bg_path.c_str());
+            if(s){
+                m_menuBgTexture = SDL_CreateTextureFromSurface(m_window.getRenderer(), s);
+                SDL_SetTextureBlendMode(m_menuBgTexture, SDL_BLENDMODE_NONE);
+                SDL_FreeSurface(s);
+            }
+        }
     }
 
     if(m_previewTimer > 0){
@@ -429,6 +457,16 @@ void Game::renderSongSelectLeft(){
     SDL_Color color = {255, 255, 255, 255};
     SDL_Color dimColor = {180, 180, 180, 255};
 
+    int bannerH = 200;
+    if(m_menuBgTexture){
+        SDL_Rect bannerDst = {0, 0, PANEL_SPLIT, bannerH};
+        SDL_RenderCopy(renderer, m_menuBgTexture, nullptr, &bannerDst);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 100);
+        SDL_RenderFillRect(renderer, &bannerDst);
+    }
+
+    int y = bannerH + 20;
+
     std::vector<std::pair<std::string, SDL_Color>> lines = {
         {m_songList[m_selectedSong].name, color},
         {"By: " + m_songList[m_selectedSong].author, dimColor},
@@ -436,7 +474,6 @@ void Game::renderSongSelectLeft(){
         {"Notes: " + std::to_string(m_beatmap.notes.size()), dimColor}
     };
 
-    int y = 40;
     for(auto& [text, col] : lines){
         SDL_Surface* s = TTF_RenderText_Solid(m_skins.getActive().m_fontUI, text.c_str(), col);
         SDL_Texture* t = SDL_CreateTextureFromSurface(renderer, s);
@@ -857,7 +894,15 @@ void Game::run(){
 
         m_debug.render(renderer);
         m_discordRPC.runCallbacks();
+        renderFPSCounter();
         SDL_RenderPresent(renderer);
+        m_fpsCount++;
+        m_fpsTimer += deltaMs;
+        if(m_fpsTimer >= 1000.0f){
+            m_fps = m_fpsCount;
+            m_fpsCount = 0;
+            m_fpsTimer = 0.0f;
+        }
     }
 }
 
@@ -880,6 +925,7 @@ void Game::shutdown(){
     SDL_DestroyTexture(m_scoreTexture);
     SDL_DestroyTexture(m_accuracyTexture);
     SDL_DestroyTexture(m_bgTexture);
+    if(m_menuBgTexture) SDL_DestroyTexture(m_menuBgTexture);
     m_skins.getActive().unload();
     TTF_Quit();
     if(m_previewMusic) Mix_FreeMusic(m_previewMusic);

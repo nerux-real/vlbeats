@@ -1,2 +1,3 @@
 1.Slider system(add on tick add combo)
 2. Make map setting (approach rate, note size etc.)
+3. Add ability to skip song intro till first note - some seconds

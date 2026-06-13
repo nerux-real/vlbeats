@@ -21,6 +21,7 @@ struct SongEntry {
     std::string lkPath;
     std::string name;
     std::string author;
+    std::string bgPath;
     int bpm;
     std::vector<std::string> difficulties;
 };
@@ -60,6 +61,7 @@ public:
     void renderComboMilestone();
     void renderHpPulseEffect();
     void renderTimerDisplay();
+    void renderFPSCounter();
 
     void backToSongSelect();
 
@@ -113,6 +115,10 @@ private:
     float m_mapDuration=0.0f;
     std::unordered_map<char, SDL_Texture*> m_letterTextures;
 
+    float m_fpsTimer=0.0f;
+    int m_fps=0;
+    int m_fpsCount=0;
+
     SDL_Texture* m_judgmentTexture = nullptr;
     SDL_Texture* m_comboTexture = nullptr;
     SDL_Texture* m_scoreTexture = nullptr;
@@ -149,4 +155,7 @@ private:
 
     std::vector<HitError> m_hitErrors;
     DiscordRPC m_discordRPC;
+
+    SDL_Texture* m_menuBgTexture = nullptr;
+    int m_lastBgSong = -1;
 };
