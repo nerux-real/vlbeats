@@ -353,4 +353,7 @@ CMakeFiles/Lonkstalk.dir/main.cpp.o: \
  /usr/include/c++/13/bits/unique_ptr.h /usr/include/c++/13/bits/fs_dir.h \
  /usr/include/c++/13/bits/fs_ops.h \
  /home/nerux/Рабочий\ стол/lonkstalk/ParticleSystem.h \
- /home/nerux/Рабочий\ стол/lonkstalk/Settings.h
+ /home/nerux/Рабочий\ стол/lonkstalk/Settings.h \
+ /home/nerux/Рабочий\ стол/lonkstalk/Skins.h \
+ /home/nerux/Рабочий\ стол/lonkstalk/DiscordRPC.h \
+ /usr/include/DiscordRPC/discord_rpc.h

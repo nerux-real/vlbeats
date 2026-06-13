@@ -181,3 +181,34 @@ void Beatmap::unloadMap(){
     bg_filename.clear();
     bg_path.clear();
 }
+
+void Beatmap::loadSongOnly(const char* lkPath){
+    mz_zip_archive zip = {};
+    if(!mz_zip_reader_init_file(&zip, lkPath, 0)) return;
+
+    size_t metaSize = 0;
+    void* metaData = mz_zip_reader_extract_file_to_heap(&zip, "metadata.txt", &metaSize, 0);
+    if(metaData){
+        std::istringstream ss(std::string((char*)metaData, metaSize));
+        std::string line;
+        while(getline(ss, line)){
+            size_t colon = line.find(':');
+            if(colon == std::string::npos) continue;
+            std::string key = line.substr(0, colon);
+            std::string value = line.substr(colon + 2);
+            if(key == "song") song_filename = value;
+        }
+        mz_free(metaData);
+    }
+
+    size_t songSize = 0;
+    void* songData = mz_zip_reader_extract_file_to_heap(&zip, song_filename.c_str(), &songSize, 0);
+    if(songData){
+        song_path = "/tmp/beatmap_preview.mp3";
+        FILE* f = fopen(song_path.c_str(), "wb");
+        fwrite(songData, 1, songSize, f);
+        fclose(f);
+        mz_free(songData);
+    }
+    mz_zip_reader_end(&zip);
+}

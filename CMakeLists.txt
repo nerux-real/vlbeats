@@ -11,6 +11,8 @@ add_executable(Lonkstalk
     miniz.c
     ParticleSystem.cpp
     Settings.cpp
+    Skins.cpp
+    DiscordRPC.cpp
 )
 add_executable(LKPacker
     lkpacker.cpp
@@ -26,3 +28,4 @@ target_link_libraries(Lonkstalk PRIVATE SDL2_gfx)
 target_link_libraries(Lonkstalk PRIVATE SDL2_ttf)
 target_link_libraries(Lonkstalk PRIVATE SDL2_image)
 target_compile_features(LKPacker PRIVATE cxx_std_17)
+target_link_libraries(Lonkstalk PRIVATE discord-rpc)

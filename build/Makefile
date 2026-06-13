@@ -190,6 +190,30 @@ DebugOverlay.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Lonkstalk.dir/build.make CMakeFiles/Lonkstalk.dir/DebugOverlay.cpp.s
 .PHONY : DebugOverlay.cpp.s
 
+DiscordRPC.o: DiscordRPC.cpp.o
+.PHONY : DiscordRPC.o
+
+# target to build an object file
+DiscordRPC.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Lonkstalk.dir/build.make CMakeFiles/Lonkstalk.dir/DiscordRPC.cpp.o
+.PHONY : DiscordRPC.cpp.o
+
+DiscordRPC.i: DiscordRPC.cpp.i
+.PHONY : DiscordRPC.i
+
+# target to preprocess a source file
+DiscordRPC.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Lonkstalk.dir/build.make CMakeFiles/Lonkstalk.dir/DiscordRPC.cpp.i
+.PHONY : DiscordRPC.cpp.i
+
+DiscordRPC.s: DiscordRPC.cpp.s
+.PHONY : DiscordRPC.s
+
+# target to generate assembly for a file
+DiscordRPC.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Lonkstalk.dir/build.make CMakeFiles/Lonkstalk.dir/DiscordRPC.cpp.s
+.PHONY : DiscordRPC.cpp.s
+
 Game.o: Game.cpp.o
 .PHONY : Game.o
 
@@ -261,6 +285,30 @@ Settings.s: Settings.cpp.s
 Settings.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Lonkstalk.dir/build.make CMakeFiles/Lonkstalk.dir/Settings.cpp.s
 .PHONY : Settings.cpp.s
+
+Skins.o: Skins.cpp.o
+.PHONY : Skins.o
+
+# target to build an object file
+Skins.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Lonkstalk.dir/build.make CMakeFiles/Lonkstalk.dir/Skins.cpp.o
+.PHONY : Skins.cpp.o
+
+Skins.i: Skins.cpp.i
+.PHONY : Skins.i
+
+# target to preprocess a source file
+Skins.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Lonkstalk.dir/build.make CMakeFiles/Lonkstalk.dir/Skins.cpp.i
+.PHONY : Skins.cpp.i
+
+Skins.s: Skins.cpp.s
+.PHONY : Skins.s
+
+# target to generate assembly for a file
+Skins.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Lonkstalk.dir/build.make CMakeFiles/Lonkstalk.dir/Skins.cpp.s
+.PHONY : Skins.cpp.s
 
 Window.o: Window.cpp.o
 .PHONY : Window.o
@@ -377,6 +425,9 @@ help:
 	@echo "... DebugOverlay.o"
 	@echo "... DebugOverlay.i"
 	@echo "... DebugOverlay.s"
+	@echo "... DiscordRPC.o"
+	@echo "... DiscordRPC.i"
+	@echo "... DiscordRPC.s"
 	@echo "... Game.o"
 	@echo "... Game.i"
 	@echo "... Game.s"
@@ -386,6 +437,9 @@ help:
 	@echo "... Settings.o"
 	@echo "... Settings.i"
 	@echo "... Settings.s"
+	@echo "... Skins.o"
+	@echo "... Skins.i"
+	@echo "... Skins.s"
 	@echo "... Window.o"
 	@echo "... Window.i"
 	@echo "... Window.s"

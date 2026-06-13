@@ -8,3 +8,8 @@ constexpr int PANEL_SPLIT = 600;
 constexpr int ENTRY_HEIGHT = 80;
 constexpr int DIFF_ENTRY_HEIGHT = 45;
 constexpr int LIST_START_Y = 100;
+
+constexpr float HP_DRAIN_RATE = 2.0f;
+constexpr float HP_EXCELLENT_ADD = 10.0f;
+constexpr float HP_GOOD_ADD = 5.0f;
+constexpr float HP_MISS_SUB = 15.0f;

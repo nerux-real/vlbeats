@@ -22,6 +22,8 @@ void Settings::load(const std::string &path) {
         else if(key=="resHeight") resHeight=std::stoi(value);
         else if(key=="fpsLock") fpsLock=std::stoi(value);
         else if(key=="bgAlpha") bgAlpha=std::stoi(value);
+        else if(key=="selectedSkin") selectedSkin=value;
+        else if(key=="debug") debug=(value=="true");
     }
 }
 
@@ -37,4 +39,6 @@ void Settings::save(const std::string &path) {
     fout<<"resHeight="<<resHeight<<"\n";
     fout<<"fpsLock="<<fpsLock<<"\n";
     fout<<"bgAlpha="<<bgAlpha<<"\n";
+    fout<<"selectedSkin="<<selectedSkin<<"\n";
+    fout<<"debug="<<(debug ? "true" : "false")<<"\n";
 }

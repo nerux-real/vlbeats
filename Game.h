@@ -12,6 +12,8 @@
 #include <vector>
 #include "ParticleSystem.h"
 #include "Settings.h"
+#include "Skins.h"
+#include "DiscordRPC.h"
 
 namespace fs = std::filesystem;
 
@@ -21,6 +23,12 @@ struct SongEntry {
     std::string author;
     int bpm;
     std::vector<std::string> difficulties;
+};
+
+struct HitError {
+    float offset;
+    float lifetime;
+    bool excellent;
 };
 
 enum class GameState {
@@ -45,6 +53,17 @@ public:
     void updateComboTexture();
     void updatePointsTexture();
     void renderLoadingScreen();
+    void updateAccuracyTexture();
+    float getAccuracy();
+    void renderHPBar();
+    void renderHitErrorBar();
+    void renderComboMilestone();
+    void renderHpPulseEffect();
+    void renderTimerDisplay();
+
+    void backToSongSelect();
+
+    std::string getGrade();
 
     void startGame(const std::string &path, const std::string &difficulty);
     void endMap();
@@ -78,24 +97,38 @@ private:
     float m_visualTime=0.0f;
     float m_syncTimer=0.0f;
 
-    TTF_Font *m_fontLarge=nullptr;
-    TTF_Font *m_fontMedium=nullptr;
-    TTF_Font *m_fontSmall=nullptr;
-    TTF_Font *m_fontSmallest=nullptr;
-
+    float m_previewTimer=0.0f;
+    float m_previewFade=0.0f;
+    float m_previewPlayTime = 0.0f;
+    bool m_previewPlaying=false;
+    int m_lastSelectedSong=-1;
+    Mix_Music* m_previewMusic=nullptr;
     int m_combo=0;
+    int m_maxCombo=0;
     int m_points=0;
     float m_displayPoints=0;
+    float m_milestoneTimer=0.0f;
+    int m_milestoneCombo=0;
+    float m_hpPulseTimer=0.0f;
+    float m_mapDuration=0.0f;
     std::unordered_map<char, SDL_Texture*> m_letterTextures;
 
     SDL_Texture* m_judgmentTexture = nullptr;
     SDL_Texture* m_comboTexture = nullptr;
     SDL_Texture* m_scoreTexture = nullptr;
     SDL_Texture* m_bgTexture = nullptr;
+    SDL_Texture* m_accuracyTexture = nullptr;
 
     int m_judgmentW, m_judgmentH;
     int m_comboW, m_comboH;
     int m_scoreW, m_scoreH;
+    int m_accuracyW, m_accuracyH;
+    int m_totalNotes=0;
+    int m_excellentHits=0;
+    int m_goodHits=0;
+    int m_misses=0;
+    float m_hp=100.0f;
+    float m_maxHp=100.0f;
     bool m_changed = false;
 
     int m_minColor=0;
@@ -112,4 +145,8 @@ private:
     int m_countdownValue=3;
 
     Settings m_settings;
+    Skins m_skins;
+
+    std::vector<HitError> m_hitErrors;
+    DiscordRPC m_discordRPC;
 };

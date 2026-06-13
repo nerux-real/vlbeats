@@ -8,6 +8,8 @@ struct Settings {
     int resHeight=1080;
     int fpsLock=0;
     int bgAlpha=64;
+    bool debug=true;
+    std::string selectedSkin="default";
 
     void load(const std::string &path);
     void save(const std::string &path);

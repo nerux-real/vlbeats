@@ -21,4 +21,5 @@ public:
     void loadFromLk(const char *lkPath, const std::string &difficulty);
     void loadMetaFromLk(const char *lkPath);
     void unloadMap();
+    void loadSongOnly(const char *lkPath);
 };

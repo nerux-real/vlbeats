@@ -83,12 +83,12 @@ clean: CMakeFiles/LKPacker.dir/clean
 CMakeFiles/Lonkstalk.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Lonkstalk.dir/build.make CMakeFiles/Lonkstalk.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Lonkstalk.dir/build.make CMakeFiles/Lonkstalk.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/home/nerux/Рабочий стол/lonkstalk/build/CMakeFiles" --progress-num=4,5,6,7,8,9,10,11,12 "Built target Lonkstalk"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/home/nerux/Рабочий стол/lonkstalk/build/CMakeFiles" --progress-num=4,5,6,7,8,9,10,11,12,13,14 "Built target Lonkstalk"
 .PHONY : CMakeFiles/Lonkstalk.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/Lonkstalk.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/nerux/Рабочий стол/lonkstalk/build/CMakeFiles" 9
+	$(CMAKE_COMMAND) -E cmake_progress_start "/home/nerux/Рабочий стол/lonkstalk/build/CMakeFiles" 11
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/Lonkstalk.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start "/home/nerux/Рабочий стол/lonkstalk/build/CMakeFiles" 0
 .PHONY : CMakeFiles/Lonkstalk.dir/rule
