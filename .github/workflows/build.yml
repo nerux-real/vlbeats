@@ -1,4 +1,4 @@
-name: Windows x64 Build (CMake)
+name: Windows x64 Build (CMake + vcpkg)
 
 on:
   push:
@@ -17,41 +17,29 @@ jobs:
       with:
         arch: x64
 
-    - name: Setup vcpkg
-      uses: lukka/run-vcpkg@v11
+    - name: Install CMake
+      uses: lukka/get-cmake@latest
 
-    - name: Install SDL dependencies
-      shell: pwsh
-      run: |
-        vcpkg install sdl2:x64-windows
-        vcpkg install sdl2-image:x64-windows
-        vcpkg install sdl2-mixer:x64-windows
-        vcpkg install sdl2-ttf:x64-windows
-        vcpkg install sdl2-gfx:x64-windows
-
-    - name: Configure CMake
+    - name: Configure CMake (with vcpkg toolchain)
       shell: pwsh
       run: |
         cmake -B build `
           -A x64 `
-          -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake" `
-          -DVCPKG_TARGET_TRIPLET=x64-windows
+          -DCMAKE_BUILD_TYPE=Release `
+          -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"
 
     - name: Build
       shell: pwsh
       run: cmake --build build --config Release
 
-    - name: Collect DLLs
+    - name: Collect artifacts
       shell: pwsh
       run: |
         mkdir out
         Copy-Item build\Release\*.exe out\
 
-        # copy vcpkg DLLs
-        Copy-Item $env:VCPKG_INSTALLATION_ROOT\installed\x64-windows\bin\*.dll out\
-
-    - name: Upload artifact
+    - name: Upload build
       uses: actions/upload-artifact@v4
       with:
-        name: Lonkstalk-windows-x64
+        name: Lonkstalk-Windows-x64
         path: out/*
