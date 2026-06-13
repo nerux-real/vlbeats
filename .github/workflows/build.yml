@@ -1,51 +1,61 @@
-name: Build Windows EXE
+name: Windows x64 Build
 
-on: [push]
+on:
+  push:
+  pull_request:
 
 jobs:
   build:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout
+      uses: actions/checkout@v4
 
-    - name: Setup MSVC
+    - name: Setup MSVC x64
       uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
 
-    - name: Download SDL2 + SDL2_mixer + SDL2_ttf
+    - name: Setup vcpkg
+      uses: lukka/run-vcpkg@v11
+
+    - name: Install SDL packages
+      shell: pwsh
       run: |
-        curl -LO https://www.libsdl.org/release/SDL2-devel-2.30.0-VC.zip
-        curl -LO https://github.com/libsdl-org/SDL_mixer/releases/download/release-2.8.0/SDL2_mixer-devel-2.8.0-VC.zip
-        curl -LO https://github.com/libsdl-org/SDL_ttf/releases/download/release-2.22.0/SDL2_ttf-devel-2.22.0-VC.zip
-        tar -xf SDL2-devel-2.30.0-VC.zip
-        tar -xf SDL2_mixer-devel-2.8.0-VC.zip
-        tar -xf SDL2_ttf-devel-2.22.0-VC.zip
+        vcpkg install sdl2:x64-windows
+        vcpkg install sdl2-image:x64-windows
+        vcpkg install sdl2-mixer:x64-windows
+        vcpkg install sdl2-ttf:x64-windows
+        vcpkg install sdl2-gfx:x64-windows
 
-    - name: Fix include folders for #include <SDL2/...>
+    - name: Configure
+      shell: pwsh
       run: |
-        mkdir SDL2-2.30.0/include/SDL2
-        move SDL2-2.30.0/include/*.h SDL2-2.30.0/include/SDL2/
-
-        mkdir SDL2_mixer-2.8.0/include/SDL2
-        move SDL2_mixer-2.8.0/include/*.h SDL2_mixer-2.8.0/include/SDL2/
-        copy SDL2-2.30.0/include/SDL2/*.h SDL2_mixer-2.8.0/include/SDL2/
-
-        mkdir SDL2_ttf-2.22.0/include/SDL2
-        move SDL2_ttf-2.22.0/include/*.h SDL2_ttf-2.22.0/include/SDL2/
-        copy SDL2-2.30.0/include/SDL2/*.h SDL2_ttf-2.22.0/include/SDL2/
+        cmake -B build `
+          -A x64 `
+          -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake" `
+          -DVCPKG_TARGET_TRIPLET=x64-windows
 
     - name: Build
+      shell: pwsh
       run: |
-        cl /EHsc /Fe:game.exe /I SDL2-2.30.0/include /I SDL2_mixer-2.8.0/include /I SDL2_ttf-2.22.0/include Beatmap.cpp Game.cpp Window.cpp main.cpp SDL2-2.30.0/lib/x64/SDL2.lib SDL2-2.30.0/lib/x64/SDL2main.lib SDL2_mixer-2.8.0/lib/x64/SDL2_mixer.lib SDL2_ttf-2.22.0/lib/x64/SDL2_ttf.lib shell32.lib /link /SUBSYSTEM:CONSOLE
+        cmake --build build --config Release
 
-    - name: Copy all required DLLs
+    - name: Copy DLLs
+      shell: pwsh
       run: |
-        copy SDL2-2.30.0/lib/x64/*.dll .
-        copy SDL2_mixer-2.8.0/lib/x64/*.dll .
-        copy SDL2_ttf-2.22.0/lib/x64/*.dll .
+        $dlls = Get-ChildItem "$env:VCPKG_INSTALLATION_ROOT\installed\x64-windows\bin\*.dll"
 
-    - name: Upload build
+        foreach($dll in $dlls)
+        {
+          Copy-Item $dll.FullName build\Release\
+        }
+
+    - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: game-build
-        path: "*.*"
+        name: Lonkstalk-Windows-x64
+        path: |
+          build/Release/Lonkstalk.exe
+          build/Release/*.dll

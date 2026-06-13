@@ -150,6 +150,21 @@ CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 //Value Computed by CMake
 CMAKE_PROJECT_NAME:STATIC=Lonkstalk
 
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION:STATIC=1.0
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION_MAJOR:STATIC=1
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION_MINOR:STATIC=0
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION_PATCH:STATIC=
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION_TWEAK:STATIC=
+
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
 
@@ -215,6 +230,9 @@ CMAKE_TAPI:FILEPATH=CMAKE_TAPI-NOTFOUND
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
+//Path to a library.
+DISCORD_RPC_LIB:FILEPATH=/usr/lib/x86_64-linux-gnu/libdiscord-rpc.so
+
 //Value Computed by CMake
 Lonkstalk_BINARY_DIR:STATIC=/home/nerux/Рабочий стол/lonkstalk/build
 
@@ -227,8 +245,17 @@ Lonkstalk_SOURCE_DIR:STATIC=/home/nerux/Рабочий стол/lonkstalk
 //The directory containing a CMake configuration file for SDL2.
 SDL2_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/SDL2
 
+//The directory containing a CMake configuration file for SDL2_gfx.
+SDL2_gfx_DIR:PATH=SDL2_gfx_DIR-NOTFOUND
+
+//The directory containing a CMake configuration file for SDL2_image.
+SDL2_image_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/SDL2_image
+
 //The directory containing a CMake configuration file for SDL2_mixer.
 SDL2_mixer_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/SDL2_mixer
+
+//The directory containing a CMake configuration file for SDL2_ttf.
+SDL2_ttf_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/SDL2_ttf
 
 
 ########################

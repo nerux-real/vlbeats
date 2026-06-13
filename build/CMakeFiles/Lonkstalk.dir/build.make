@@ -139,24 +139,10 @@ CMakeFiles/Lonkstalk.dir/DebugOverlay.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Lonkstalk.dir/DebugOverlay.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/nerux/Рабочий стол/lonkstalk/DebugOverlay.cpp" -o CMakeFiles/Lonkstalk.dir/DebugOverlay.cpp.s
 
-CMakeFiles/Lonkstalk.dir/miniz.c.o: CMakeFiles/Lonkstalk.dir/flags.make
-CMakeFiles/Lonkstalk.dir/miniz.c.o: /home/nerux/Рабочий\ стол/lonkstalk/miniz.c
-CMakeFiles/Lonkstalk.dir/miniz.c.o: CMakeFiles/Lonkstalk.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/nerux/Рабочий стол/lonkstalk/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_6) "Building C object CMakeFiles/Lonkstalk.dir/miniz.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/Lonkstalk.dir/miniz.c.o -MF CMakeFiles/Lonkstalk.dir/miniz.c.o.d -o CMakeFiles/Lonkstalk.dir/miniz.c.o -c "/home/nerux/Рабочий стол/lonkstalk/miniz.c"
-
-CMakeFiles/Lonkstalk.dir/miniz.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/Lonkstalk.dir/miniz.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/home/nerux/Рабочий стол/lonkstalk/miniz.c" > CMakeFiles/Lonkstalk.dir/miniz.c.i
-
-CMakeFiles/Lonkstalk.dir/miniz.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/Lonkstalk.dir/miniz.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/home/nerux/Рабочий стол/lonkstalk/miniz.c" -o CMakeFiles/Lonkstalk.dir/miniz.c.s
-
 CMakeFiles/Lonkstalk.dir/ParticleSystem.cpp.o: CMakeFiles/Lonkstalk.dir/flags.make
 CMakeFiles/Lonkstalk.dir/ParticleSystem.cpp.o: /home/nerux/Рабочий\ стол/lonkstalk/ParticleSystem.cpp
 CMakeFiles/Lonkstalk.dir/ParticleSystem.cpp.o: CMakeFiles/Lonkstalk.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/nerux/Рабочий стол/lonkstalk/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/Lonkstalk.dir/ParticleSystem.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/nerux/Рабочий стол/lonkstalk/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/Lonkstalk.dir/ParticleSystem.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Lonkstalk.dir/ParticleSystem.cpp.o -MF CMakeFiles/Lonkstalk.dir/ParticleSystem.cpp.o.d -o CMakeFiles/Lonkstalk.dir/ParticleSystem.cpp.o -c "/home/nerux/Рабочий стол/lonkstalk/ParticleSystem.cpp"
 
 CMakeFiles/Lonkstalk.dir/ParticleSystem.cpp.i: cmake_force
@@ -170,7 +156,7 @@ CMakeFiles/Lonkstalk.dir/ParticleSystem.cpp.s: cmake_force
 CMakeFiles/Lonkstalk.dir/Settings.cpp.o: CMakeFiles/Lonkstalk.dir/flags.make
 CMakeFiles/Lonkstalk.dir/Settings.cpp.o: /home/nerux/Рабочий\ стол/lonkstalk/Settings.cpp
 CMakeFiles/Lonkstalk.dir/Settings.cpp.o: CMakeFiles/Lonkstalk.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/nerux/Рабочий стол/lonkstalk/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/Lonkstalk.dir/Settings.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/nerux/Рабочий стол/lonkstalk/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/Lonkstalk.dir/Settings.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Lonkstalk.dir/Settings.cpp.o -MF CMakeFiles/Lonkstalk.dir/Settings.cpp.o.d -o CMakeFiles/Lonkstalk.dir/Settings.cpp.o -c "/home/nerux/Рабочий стол/lonkstalk/Settings.cpp"
 
 CMakeFiles/Lonkstalk.dir/Settings.cpp.i: cmake_force
@@ -184,7 +170,7 @@ CMakeFiles/Lonkstalk.dir/Settings.cpp.s: cmake_force
 CMakeFiles/Lonkstalk.dir/Skins.cpp.o: CMakeFiles/Lonkstalk.dir/flags.make
 CMakeFiles/Lonkstalk.dir/Skins.cpp.o: /home/nerux/Рабочий\ стол/lonkstalk/Skins.cpp
 CMakeFiles/Lonkstalk.dir/Skins.cpp.o: CMakeFiles/Lonkstalk.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/nerux/Рабочий стол/lonkstalk/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/Lonkstalk.dir/Skins.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/nerux/Рабочий стол/lonkstalk/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/Lonkstalk.dir/Skins.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Lonkstalk.dir/Skins.cpp.o -MF CMakeFiles/Lonkstalk.dir/Skins.cpp.o.d -o CMakeFiles/Lonkstalk.dir/Skins.cpp.o -c "/home/nerux/Рабочий стол/lonkstalk/Skins.cpp"
 
 CMakeFiles/Lonkstalk.dir/Skins.cpp.i: cmake_force
@@ -198,7 +184,7 @@ CMakeFiles/Lonkstalk.dir/Skins.cpp.s: cmake_force
 CMakeFiles/Lonkstalk.dir/DiscordRPC.cpp.o: CMakeFiles/Lonkstalk.dir/flags.make
 CMakeFiles/Lonkstalk.dir/DiscordRPC.cpp.o: /home/nerux/Рабочий\ стол/lonkstalk/DiscordRPC.cpp
 CMakeFiles/Lonkstalk.dir/DiscordRPC.cpp.o: CMakeFiles/Lonkstalk.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/nerux/Рабочий стол/lonkstalk/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/Lonkstalk.dir/DiscordRPC.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/nerux/Рабочий стол/lonkstalk/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/Lonkstalk.dir/DiscordRPC.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Lonkstalk.dir/DiscordRPC.cpp.o -MF CMakeFiles/Lonkstalk.dir/DiscordRPC.cpp.o.d -o CMakeFiles/Lonkstalk.dir/DiscordRPC.cpp.o -c "/home/nerux/Рабочий стол/lonkstalk/DiscordRPC.cpp"
 
 CMakeFiles/Lonkstalk.dir/DiscordRPC.cpp.i: cmake_force
@@ -209,6 +195,20 @@ CMakeFiles/Lonkstalk.dir/DiscordRPC.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Lonkstalk.dir/DiscordRPC.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/nerux/Рабочий стол/lonkstalk/DiscordRPC.cpp" -o CMakeFiles/Lonkstalk.dir/DiscordRPC.cpp.s
 
+CMakeFiles/Lonkstalk.dir/miniz.c.o: CMakeFiles/Lonkstalk.dir/flags.make
+CMakeFiles/Lonkstalk.dir/miniz.c.o: /home/nerux/Рабочий\ стол/lonkstalk/miniz.c
+CMakeFiles/Lonkstalk.dir/miniz.c.o: CMakeFiles/Lonkstalk.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/nerux/Рабочий стол/lonkstalk/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_10) "Building C object CMakeFiles/Lonkstalk.dir/miniz.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/Lonkstalk.dir/miniz.c.o -MF CMakeFiles/Lonkstalk.dir/miniz.c.o.d -o CMakeFiles/Lonkstalk.dir/miniz.c.o -c "/home/nerux/Рабочий стол/lonkstalk/miniz.c"
+
+CMakeFiles/Lonkstalk.dir/miniz.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/Lonkstalk.dir/miniz.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/home/nerux/Рабочий стол/lonkstalk/miniz.c" > CMakeFiles/Lonkstalk.dir/miniz.c.i
+
+CMakeFiles/Lonkstalk.dir/miniz.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/Lonkstalk.dir/miniz.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/home/nerux/Рабочий стол/lonkstalk/miniz.c" -o CMakeFiles/Lonkstalk.dir/miniz.c.s
+
 # Object files for target Lonkstalk
 Lonkstalk_OBJECTS = \
 "CMakeFiles/Lonkstalk.dir/main.cpp.o" \
@@ -216,11 +216,11 @@ Lonkstalk_OBJECTS = \
 "CMakeFiles/Lonkstalk.dir/Window.cpp.o" \
 "CMakeFiles/Lonkstalk.dir/Beatmap.cpp.o" \
 "CMakeFiles/Lonkstalk.dir/DebugOverlay.cpp.o" \
-"CMakeFiles/Lonkstalk.dir/miniz.c.o" \
 "CMakeFiles/Lonkstalk.dir/ParticleSystem.cpp.o" \
 "CMakeFiles/Lonkstalk.dir/Settings.cpp.o" \
 "CMakeFiles/Lonkstalk.dir/Skins.cpp.o" \
-"CMakeFiles/Lonkstalk.dir/DiscordRPC.cpp.o"
+"CMakeFiles/Lonkstalk.dir/DiscordRPC.cpp.o" \
+"CMakeFiles/Lonkstalk.dir/miniz.c.o"
 
 # External object files for target Lonkstalk
 Lonkstalk_EXTERNAL_OBJECTS =
@@ -230,13 +230,18 @@ Lonkstalk: CMakeFiles/Lonkstalk.dir/Game.cpp.o
 Lonkstalk: CMakeFiles/Lonkstalk.dir/Window.cpp.o
 Lonkstalk: CMakeFiles/Lonkstalk.dir/Beatmap.cpp.o
 Lonkstalk: CMakeFiles/Lonkstalk.dir/DebugOverlay.cpp.o
-Lonkstalk: CMakeFiles/Lonkstalk.dir/miniz.c.o
 Lonkstalk: CMakeFiles/Lonkstalk.dir/ParticleSystem.cpp.o
 Lonkstalk: CMakeFiles/Lonkstalk.dir/Settings.cpp.o
 Lonkstalk: CMakeFiles/Lonkstalk.dir/Skins.cpp.o
 Lonkstalk: CMakeFiles/Lonkstalk.dir/DiscordRPC.cpp.o
+Lonkstalk: CMakeFiles/Lonkstalk.dir/miniz.c.o
 Lonkstalk: CMakeFiles/Lonkstalk.dir/build.make
 Lonkstalk: /usr/lib/x86_64-linux-gnu/libSDL2.so
+Lonkstalk: /usr/lib/x86_64-linux-gnu/libSDL2main.a
+Lonkstalk: /usr/lib/x86_64-linux-gnu/libSDL2_image.so
+Lonkstalk: /usr/lib/x86_64-linux-gnu/libSDL2_mixer.so
+Lonkstalk: /usr/lib/x86_64-linux-gnu/libSDL2_ttf.so
+Lonkstalk: /usr/lib/x86_64-linux-gnu/libdiscord-rpc.so
 Lonkstalk: CMakeFiles/Lonkstalk.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="/home/nerux/Рабочий стол/lonkstalk/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_11) "Linking CXX executable Lonkstalk"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/Lonkstalk.dir/link.txt --verbose=$(VERBOSE)

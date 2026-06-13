@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.16)
-project(Lonkstalk)
+
+project(Lonkstalk VERSION 1.0 LANGUAGES C CXX)
+
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(Lonkstalk
     main.cpp
@@ -8,24 +11,47 @@ add_executable(Lonkstalk
     Window.cpp
     Beatmap.cpp
     DebugOverlay.cpp
-    miniz.c
     ParticleSystem.cpp
     Settings.cpp
     Skins.cpp
     DiscordRPC.cpp
+    miniz.c
 )
+
 add_executable(LKPacker
     lkpacker.cpp
     miniz.c
 )
 
-find_package(SDL2 REQUIRED)
-target_include_directories(Lonkstalk PRIVATE ${SDL2_INCLUDE_DIRS})
-target_link_libraries(Lonkstalk PRIVATE ${SDL2_LIBRARIES})
-find_package(SDL2_mixer REQUIRED)
-target_link_libraries(Lonkstalk PRIVATE SDL2_mixer)
-target_link_libraries(Lonkstalk PRIVATE SDL2_gfx)
-target_link_libraries(Lonkstalk PRIVATE SDL2_ttf)
-target_link_libraries(Lonkstalk PRIVATE SDL2_image)
+find_package(SDL2 REQUIRED CONFIG)
+find_package(SDL2_image REQUIRED CONFIG)
+find_package(SDL2_mixer REQUIRED CONFIG)
+find_package(SDL2_ttf REQUIRED CONFIG)
+
+find_package(SDL2_gfx CONFIG QUIET)
+
+target_link_libraries(Lonkstalk PRIVATE
+    SDL2::SDL2
+    SDL2::SDL2main
+    SDL2_image::SDL2_image
+    SDL2_mixer::SDL2_mixer
+    SDL2_ttf::SDL2_ttf
+)
+
+if(TARGET SDL2_gfx::SDL2_gfx)
+    target_link_libraries(Lonkstalk PRIVATE SDL2_gfx::SDL2_gfx)
+endif()
+
+find_library(DISCORD_RPC_LIB
+    NAMES discord-rpc
+)
+
+if(DISCORD_RPC_LIB)
+    target_link_libraries(Lonkstalk PRIVATE ${DISCORD_RPC_LIB})
+endif()
+
 target_compile_features(LKPacker PRIVATE cxx_std_17)
-target_link_libraries(Lonkstalk PRIVATE discord-rpc)
+
+if(WIN32)
+    target_compile_definitions(Lonkstalk PRIVATE _CRT_SECURE_NO_WARNINGS)
+endif()
