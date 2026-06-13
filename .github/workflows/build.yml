@@ -9,37 +9,82 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout
+    - name: Checkout repo
       uses: actions/checkout@v4
 
-    - name: Setup MSVC (x64)
+    # =========================
+    # CLEAN ENV (fix your cache errors)
+    # =========================
+    - name: Clean build folder
+      shell: pwsh
+      run: |
+        if (Test-Path build) { Remove-Item build -Recurse -Force }
+
+    # =========================
+    # MSVC x64
+    # =========================
+    - name: Setup MSVC
       uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: x64
 
-    - name: Install CMake
+    # =========================
+    # INSTALL CMAKE
+    # =========================
+    - name: Setup CMake
       uses: lukka/get-cmake@latest
 
-    - name: Configure CMake (with vcpkg toolchain)
+    # =========================
+    # CLONE VCPKG (IMPORTANT: avoid run-vcpkg issues)
+    # =========================
+    - name: Clone vcpkg
       shell: pwsh
       run: |
-        cmake -B build `
-          -A x64 `
+        git clone https://github.com/microsoft/vcpkg.git
+        cd vcpkg
+        .\bootstrap-vcpkg.bat
+
+    # =========================
+    # INSTALL DEPENDENCIES
+    # =========================
+    - name: Install SDL dependencies
+      shell: pwsh
+      run: |
+        .\vcpkg\vcpkg.exe install sdl2:x64-windows
+        .\vcpkg\vcpkg.exe install sdl2-image:x64-windows
+        .\vcpkg\vcpkg.exe install sdl2-mixer:x64-windows
+        .\vcpkg\vcpkg.exe install sdl2-ttf:x64-windows
+        .\vcpkg\vcpkg.exe install sdl2-gfx:x64-windows
+
+    # =========================
+    # CONFIGURE CMAKE
+    # =========================
+    - name: Configure CMake
+      shell: pwsh
+      run: |
+        cmake -S . -B build -A x64 `
           -DCMAKE_BUILD_TYPE=Release `
           -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"
 
-    - name: Build
+    # =========================
+    # BUILD
+    # =========================
+    - name: Build project
       shell: pwsh
-      run: cmake --build build --config Release
+      run: |
+        cmake --build build --config Release
 
-    - name: Collect artifacts
+    # =========================
+    # COLLECT OUTPUT
+    # =========================
+    - name: Prepare artifacts
       shell: pwsh
       run: |
         mkdir out
         Copy-Item build\Release\*.exe out\
 
-    - name: Upload build
+    - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: Lonkstalk-Windows-x64
+        name: Lonkstalk-windows-x64
         path: out/*
