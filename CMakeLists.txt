@@ -34,14 +34,16 @@ find_package(SDL2_ttf REQUIRED CONFIG)
 find_package(SDL2_gfx CONFIG QUIET)
 
 target_link_libraries(Lonkstalk PRIVATE
-    SDL2::SDL2
     SDL2::SDL2main
+    SDL2::SDL2
     SDL2_image::SDL2_image
     SDL2_mixer::SDL2_mixer
     SDL2_ttf::SDL2_ttf
-    pthread
-    dl
 )
+
+if(NOT WIN32)
+    target_link_libraries(Lonkstalk PRIVATE pthread dl)
+endif()
 
 if(TARGET SDL2_gfx::SDL2_gfx)
     target_link_libraries(Lonkstalk PRIVATE SDL2_gfx::SDL2_gfx)

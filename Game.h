@@ -13,7 +13,7 @@
 #include "ParticleSystem.h"
 #include "Settings.h"
 #include "Skins.h"
-#include "DiscordRPC.h"
+// #include "DiscordRPC.h"
 #include "Hash.h"
 #include "Database.h"
 

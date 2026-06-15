@@ -4,48 +4,62 @@
 #include <iostream>
 #include <sstream>
 #include "miniz.h"
+#include <filesystem>
 
-void Beatmap::load(const char *folder){
-    std::string path=std::string(folder)+"/metadata.txt";
-    std::ifstream fin(path);
-    if(!fin.is_open()){
-        std::cerr<<"Could not open "<<path<<std::endl;
-        return;
-    }
+namespace fs = std::filesystem;
 
-    std::string line;
-    while(getline(fin, line)){
-        size_t colon = line.find(':');
-        if(colon==std::string::npos) continue;
-        std::string key = line.substr(0, colon);
-        std::string value = line.substr(colon+2);
+// void Beatmap::load(const char *folder){
+//     std::string path=std::string(folder)+"/metadata.txt";
+//     std::ifstream fin(path);
+//     if(!fin.is_open()){
+//         std::cerr<<"Could not open "<<path<<std::endl;
+//         return;
+//     }
 
-        if(key=="name") name=value;
-        else if(key=="author") author=value;
-        else if(key=="song") song_path=std::string(folder)+"/"+value;
-        else if(key=="song_original_name") song_original_name=value;
-        else if(key=="bpm") bpm=std::stoi(value);
-    }
-    fin.close();
+//     std::string line;
+//     while(getline(fin, line)){
+//         size_t colon = line.find(':');
+//         if(colon==std::string::npos) continue;
+//         std::string key = line.substr(0, colon);
+//         std::string value = line.substr(colon+2);
 
-    path=std::string(folder)+"/map.txt";
-    fin.open(path);
-    if(!fin.is_open()){
-        std::cerr<<"Could not open "<<path<<std::endl;
-        return;
+//         if(key=="name") name=value;
+//         else if(key=="author") author=value;
+//         else if(key=="song") song_path=std::string(folder)+"/"+value;
+//         else if(key=="song_original_name") song_original_name=value;
+//         else if(key=="bpm") bpm=std::stoi(value);
+//     }
+//     fin.close();
+
+//     path=std::string(folder)+"/map.txt";
+//     fin.open(path);
+//     if(!fin.is_open()){
+//         std::cerr<<"Could not open "<<path<<std::endl;
+//         return;
+//     }
+//     while(getline(fin, line)){
+//         if(line.empty()) continue;
+//         std::istringstream iss(line);
+//         Note note;
+//         iss>>note.timestampMs>>note.key>>note.gridCol>>note.gridRow;
+//         notes.push_back(note);
+//     }
+//     std::cout << "Loaded: " << name << " by " << author << " BPM:" << bpm << "\n";
+//     std::cout << "Notes: " << notes.size() << "\n";
+// }
+
+void doTmpCleanup(){
+    if(fs::exists("./tmp")){
+        for(auto &entry : fs::directory_iterator("./tmp")){
+            fs::remove(entry.path());
+        }
+    } else {
+        fs::create_directory("./tmp");
     }
-    while(getline(fin, line)){
-        if(line.empty()) continue;
-        std::istringstream iss(line);
-        Note note;
-        iss>>note.timestampMs>>note.key>>note.gridCol>>note.gridRow;
-        notes.push_back(note);
-    }
-    std::cout << "Loaded: " << name << " by " << author << " BPM:" << bpm << "\n";
-    std::cout << "Notes: " << notes.size() << "\n";
 }
 
 void Beatmap::loadFromLk(const char *lkPath, const std::string &difficulty){
+    doTmpCleanup();
     mz_zip_archive zip = {};
     if(!mz_zip_reader_init_file(&zip, lkPath, 0)){
         std::cerr<<"Failed to open: "<<lkPath<<std::endl;
@@ -69,7 +83,7 @@ void Beatmap::loadFromLk(const char *lkPath, const std::string &difficulty){
         mz_zip_reader_end(&zip);
         return;
     }
-    song_path="/tmp/beatmap.mp3";
+    song_path="./tmp/beatmap.mp3";
     FILE *f=fopen(song_path.c_str(), "wb");
     fwrite(songData, 1, songSize, f);
     fclose(f);
@@ -80,7 +94,7 @@ void Beatmap::loadFromLk(const char *lkPath, const std::string &difficulty){
     size_t bgSize=0;
     void* bgData = mz_zip_reader_extract_file_to_heap(&zip, bg_filename.c_str(), &bgSize, 0);
     if(bgData){
-        std::string bgPath="/tmp/beatmap_bg.png";
+        std::string bgPath="./tmp/beatmap_bg.png";
         FILE *bgf=fopen(bgPath.c_str(), "wb");
         fwrite(bgData, 1, bgSize, bgf);
         fclose(bgf);
@@ -183,6 +197,7 @@ void Beatmap::unloadMap(){
 }
 
 void Beatmap::loadSongOnly(const char* lkPath){
+    doTmpCleanup();
     mz_zip_archive zip = {};
     if(!mz_zip_reader_init_file(&zip, lkPath, 0)) return;
 
@@ -204,7 +219,7 @@ void Beatmap::loadSongOnly(const char* lkPath){
     size_t songSize = 0;
     void* songData = mz_zip_reader_extract_file_to_heap(&zip, song_filename.c_str(), &songSize, 0);
     if(songData){
-        song_path = "/tmp/beatmap_preview.mp3";
+        song_path = "./tmp/beatmap_preview.mp3";
         FILE* f = fopen(song_path.c_str(), "wb");
         fwrite(songData, 1, songSize, f);
         fclose(f);
@@ -237,7 +252,7 @@ void Beatmap::loadBackgroundOnly(const char* lkPath){
     size_t bgSize = 0;
     void* bgData = mz_zip_reader_extract_file_to_heap(&zip, bg_filename.c_str(), &bgSize, 0);
     if(bgData){
-        std::string bgPath = "/tmp/menu_bg_" + std::to_string(std::hash<std::string>{}(lkPath)) + ".png";
+        std::string bgPath = "./tmp/menu_bg_" + std::to_string(std::hash<std::string>{}(lkPath)) + ".png";
         FILE* f = fopen(bgPath.c_str(), "wb");
         fwrite(bgData, 1, bgSize, f);
         fclose(f);
