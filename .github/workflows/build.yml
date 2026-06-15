@@ -1,4 +1,4 @@
-name: Build Windows
+name: Build All Platforms
 
 on:
   push:
@@ -61,4 +61,79 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: VLBeats-windows
+          path: prod/
+
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y cmake build-essential libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev
+
+      - name: Configure
+        run: |
+          mkdir -p build-linux
+          cd build-linux
+          cmake ..
+
+      - name: Build
+        run: |
+          cd build-linux
+          make
+
+      - name: Prepare distribution
+        run: |
+          mkdir -p prod
+          cp build-linux/Lonkstalk prod/VLBeats
+          cp build-linux/LKPacker prod/LKPacker
+          cp -r beatmaps prod/beatmaps
+          cp -r skins prod/skins
+          chmod +x prod/VLBeats prod/LKPacker
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: VLBeats-linux
+          path: prod/
+
+  build-mac:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          brew install cmake sdl2 sdl2_image sdl2_mixer sdl2_ttf
+
+      - name: Configure
+        run: |
+          mkdir -p build-mac
+          cd build-mac
+          cmake ..
+
+      - name: Build
+        run: |
+          cd build-mac
+          make
+
+      - name: Prepare distribution
+        run: |
+          mkdir -p prod
+          cp build-mac/Lonkstalk prod/VLBeats
+          cp build-mac/LKPacker prod/LKPacker
+          cp -r beatmaps prod/beatmaps
+          cp -r skins prod/skins
+          chmod +x prod/VLBeats prod/LKPacker
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: VLBeats-mac
           path: prod/
