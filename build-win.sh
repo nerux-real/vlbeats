@@ -1,11 +1,11 @@
-[ -f build-win/scores.db ] && cp build-win/scores.db scores.db
-[ -f build-win/settings.ini ] && cp build-win/settings.ini settings.ini
+[ -f build-win/prod/scores.db ] && cp build-win/prod/scores.db scores.db
+[ -f build-win/prod/settings.ini ] && cp build-win/prod/settings.ini settings.ini
 rm -rf build-win
 mkdir build-win
 cp -r beatmaps build-win/beatmaps
 cp -r skins build-win/skins
-[ -f scores.db ] cp scores.db build-win/scores.db
-[-f settings.ini ] cp settings.ini build-win/settings.ini
+[ -f scores.db ] && cp scores.db build-win/scores.db
+[-f settings.ini ] && cp settings.ini build-win/settings.ini
 cd build-win
 cmake .. -G "MinGW Makefiles"
 mingw32-make
@@ -20,3 +20,5 @@ cp LKPacker.exe prod/LKPacker.exe
 ldd LKPacker.exe | grep '/mingw64/bin/' | awk '{print $3}' | while read -r dll; do
     cp -u "$dll" prod/
 done
+[ -f scores.db ] && cp scores.db build-win/prod/scores.db
+[ -f settings.ini ] && cp settings.ini build-win/prod/settings.ini

@@ -566,7 +566,11 @@ void Game::updateSongSelectMenu(float deltaMs){
     if(m_previewTimer > 0){
         m_previewTimer -= deltaMs;
         if(m_previewTimer <= 0){
-            if(m_previewMusic) Mix_FreeMusic(m_previewMusic);
+            if(m_previewMusic){
+                Mix_HaltMusic();
+                Mix_FreeMusic(m_previewMusic);
+                m_previewMusic = nullptr;
+            }
             Beatmap temp;
             temp.loadMetaFromLk(m_songList[m_selectedSong].lkPath.c_str());
             temp.loadSongOnly(m_songList[m_selectedSong].lkPath.c_str());

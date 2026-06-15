@@ -1,49 +1,64 @@
-name: Windows x64 Build (CMake + vcpkg)
+name: Build Windows
 
 on:
   push:
-  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
-  build:
+  build-windows:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Clean build folder
-      shell: pwsh
-      run: |
-        if (Test-Path build) { Remove-Item build -Recurse -Force }
+      - name: Setup MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            mingw-w64-x86_64-toolchain
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-SDL2
+            mingw-w64-x86_64-SDL2_image
+            mingw-w64-x86_64-SDL2_mixer
+            mingw-w64-x86_64-SDL2_ttf
+            mingw-w64-x86_64-make
 
-    - name: Setup MSVC
-      uses: ilammy/msvc-dev-cmd@v1
-      with:
-        arch: x64
+      - name: Configure
+        shell: msys2 {0}
+        run: |
+          mkdir -p build-win
+          cd build-win
+          cmake .. -G "MinGW Makefiles"
 
-    - name: Setup CMake
-      uses: lukka/get-cmake@latest
+      - name: Build
+        shell: msys2 {0}
+        run: |
+          cd build-win
+          mingw32-make
 
-    - name: Clone vcpkg
-      shell: pwsh
-      run: |
-        git clone https://github.com/microsoft/vcpkg.git
-        cd vcpkg
-        .\bootstrap-vcpkg.bat
+      - name: Prepare distribution
+        shell: msys2 {0}
+        run: |
+          mkdir -p prod
+          cp build-win/Lonkstalk.exe prod/VLBeats.exe
+          cp build-win/LKPacker.exe prod/LKPacker.exe
+          cp -r beatmaps prod/beatmaps
+          cp -r skins prod/skins
 
-    - name: Configure CMake
-      shell: pwsh
-      run: |
-        cmake -S . -B build -A x64 `
-          -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"
+          cd build-win
+          ldd Lonkstalk.exe | grep '/mingw64/bin/' | awk '{print $3}' | while read -r dll; do
+              cp -u "$dll" ../prod/
+          done
+          ldd LKPacker.exe | grep '/mingw64/bin/' | awk '{print $3}' | while read -r dll; do
+              cp -u "$dll" ../prod/
+          done
 
-    - name: Build
-      shell: pwsh
-      run: cmake --build build --config Release
-
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: Lonkstalk-windows-x64
-        path: build/Release/*.exe
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: VLBeats-windows
+          path: prod/

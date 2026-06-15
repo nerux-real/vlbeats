@@ -50,9 +50,9 @@ namespace fs = std::filesystem;
 
 void doTmpCleanup(){
     if(fs::exists("./tmp")){
-        for(auto &entry : fs::directory_iterator("./tmp")){
-            fs::remove(entry.path());
-        }
+        // for(auto &entry : fs::directory_iterator("./tmp")){
+        //     fs::remove(entry.path());
+        // }
     } else {
         fs::create_directory("./tmp");
     }
@@ -254,6 +254,12 @@ void Beatmap::loadBackgroundOnly(const char* lkPath){
     if(bgData){
         std::string bgPath = "./tmp/menu_bg_" + std::to_string(std::hash<std::string>{}(lkPath)) + ".png";
         FILE* f = fopen(bgPath.c_str(), "wb");
+        if(!f){
+            std::cerr << "Failed to open " << bgPath << " for writing\n";
+            mz_free(bgData);
+            mz_zip_reader_end(&zip);
+            return;
+        }
         fwrite(bgData, 1, bgSize, f);
         fclose(f);
         mz_free(bgData);
