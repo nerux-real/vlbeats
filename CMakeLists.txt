@@ -45,6 +45,11 @@ if(NOT WIN32)
     target_link_libraries(Lonkstalk PRIVATE pthread dl)
 endif()
 
+if(APPLE)
+    target_include_directories(Lonkstalk PRIVATE /opt/homebrew/include /usr/local/include)
+    target_include_directories(LKPacker PRIVATE /opt/homebrew/include /usr/local/include)
+endif()
+
 if(TARGET SDL2_gfx::SDL2_gfx)
     target_link_libraries(Lonkstalk PRIVATE SDL2_gfx::SDL2_gfx)
 endif()
