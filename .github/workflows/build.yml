@@ -32,7 +32,7 @@ jobs:
         run: |
           mkdir -p build-win
           cd build-win
-          cmake .. -G "MinGW Makefiles" -DBUILD_LKEDITOR=OFF
+          cmake .. -G "MinGW Makefiles"
 
       - name: Build
         shell: msys2 {0}

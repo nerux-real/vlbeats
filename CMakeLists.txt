@@ -40,10 +40,10 @@ target_include_directories(LKEditor PRIVATE
     tools/LKEditor/deps
     tools/LKEditor/deps/backends
 )
-target_link_libraries(LKEditor PRIVATE
-    SDL2::SDL2
-    SDL2::SDL2main
-)
+# target_link_libraries(LKEditor PRIVATE
+#     SDL2::SDL2
+#     SDL2::SDL2main
+# )
 
 find_package(SDL2 REQUIRED CONFIG)
 find_package(SDL2_image REQUIRED CONFIG)
