@@ -10,7 +10,11 @@ struct Skin {
     std::string author;
     std::string path;
 
+
+    //textures
     SDL_Texture* noteTexture  = nullptr;
+
+    //fonts
     TTF_Font* ll_fontGame = nullptr;
     TTF_Font* l_fontGame = nullptr;
     TTF_Font* m_fontGame = nullptr;
@@ -18,7 +22,13 @@ struct Skin {
     TTF_Font* l_fontUI = nullptr;
     TTF_Font* m_fontUI = nullptr;
     TTF_Font* s_fontUI = nullptr;
+
+    //sounds
     Mix_Chunk* hitsound1 = nullptr;
+    Mix_Chunk* ui_switch = nullptr;
+    Mix_Chunk* ui_accept = nullptr;
+    Mix_Chunk* game_fail = nullptr;
+    Mix_Chunk* game_pass = nullptr;
 
     void load(SDL_Renderer* renderer);
     void unload();

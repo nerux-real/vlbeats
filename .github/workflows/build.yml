@@ -46,15 +46,16 @@ jobs:
           mkdir -p prod
           cp build-win/Lonkstalk.exe prod/VLBeats.exe
           cp build-win/LKPacker.exe prod/LKPacker.exe
-          cp -r beatmaps prod/beatmaps
-          cp -r skins prod/skins
+          cp -r gamestuff/beatmaps prod/beatmaps
+          cp -r gamestuff/skins prod/skins
+          [ -f gamestuff/scores.db ] && cp gamestuff/scores.db prod/scores.db
+          [ -f gamestuff/settings.ini ] && cp gamestuff/settings.ini prod/settings.ini
 
-          cd build-win
-          ldd Lonkstalk.exe | grep '/mingw64/bin/' | awk '{print $3}' | while read -r dll; do
-              cp -u "$dll" ../prod/
+          ldd build-win/Lonkstalk.exe | grep '/mingw64/bin/' | awk '{print $3}' | while read -r dll; do
+            cp -u "$dll" prod/
           done
-          ldd LKPacker.exe | grep '/mingw64/bin/' | awk '{print $3}' | while read -r dll; do
-              cp -u "$dll" ../prod/
+          ldd build-win/LKPacker.exe | grep '/mingw64/bin/' | awk '{print $3}' | while read -r dll; do
+            cp -u "$dll" prod/
           done
 
       - name: Upload artifact
@@ -91,8 +92,10 @@ jobs:
           mkdir -p prod
           cp build-linux/Lonkstalk prod/VLBeats
           cp build-linux/LKPacker prod/LKPacker
-          cp -r beatmaps prod/beatmaps
-          cp -r skins prod/skins
+          cp -r gamestuff/beatmaps prod/beatmaps
+          cp -r gamestuff/skins prod/skins
+          [ -f gamestuff/scores.db ] && cp gamestuff/scores.db prod/scores.db
+          [ -f gamestuff/settings.ini ] && cp gamestuff/settings.ini prod/settings.ini
           chmod +x prod/VLBeats prod/LKPacker
 
       - name: Upload artifact
@@ -128,8 +131,10 @@ jobs:
           mkdir -p prod
           cp build-mac/Lonkstalk prod/VLBeats
           cp build-mac/LKPacker prod/LKPacker
-          cp -r beatmaps prod/beatmaps
-          cp -r skins prod/skins
+          cp -r gamestuff/beatmaps prod/beatmaps
+          cp -r gamestuff/skins prod/skins
+          [ -f gamestuff/scores.db ] && cp gamestuff/scores.db prod/scores.db
+          [ -f gamestuff/settings.ini ] && cp gamestuff/settings.ini prod/settings.ini
           chmod +x prod/VLBeats prod/LKPacker
 
       - name: Upload artifact

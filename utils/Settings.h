@@ -2,7 +2,10 @@
 #include <string>
 
 struct Settings {
-    int volume=50;
+    int master_volume=50;
+    int music_volume=100;
+    int hitsound_volume=50;
+    int ui_volume=50;
     int offset=0;
     int resWidth=1920;
     int resHeight=1080;

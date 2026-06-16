@@ -1,3 +1,7 @@
+!!! build.yml incorrect FAILS!
+
+save settings made by game (ex. volume, debug mode etc)
+
 some strange things with fullscreen and borderless
 add dynamic resolution change in game. recalculate everything, not hardcoded and unchangable
 

@@ -97,8 +97,26 @@ public:
     void updateResults(float deltaMs);
     void renderResults();
 
+    void renderVolumeBar();
+
     void scanBeatmaps();
+
+    void calculateVolume();
+    void drawSlider(SDL_Renderer* r, int x, int y, int w, int h, float percent, Uint8 alpha);
+    void onMouseDown(int mx, int my);
+    void onMouseUp();
+    void onMouseMove(int mx);
 private:
+    //final volumes
+    int m_finalMusicVolume=100;
+    int m_finalHitsoundVolume=50;
+    int m_finalUiVolume=50;
+    bool m_volumeDragging = false;
+    enum VolumeTarget { VOL_MASTER, VOL_MUSIC, VOL_HITSOUND, VOL_UI, VOL_NONE };
+    VolumeTarget m_dragTarget = VOL_NONE;
+    float m_volumeBarTimer=0.0f;
+
+
     DebugOverlay m_debug;
     Layout m_layout;
 

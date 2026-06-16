@@ -18,6 +18,11 @@ void Skin::unload(){
     if(l_fontUI) TTF_CloseFont(l_fontUI);
     if(m_fontUI) TTF_CloseFont(m_fontUI);
     if(s_fontUI) TTF_CloseFont(s_fontUI);
+    if(hitsound1) Mix_FreeChunk(hitsound1);
+    if(ui_switch) Mix_FreeChunk(ui_switch);
+    if(ui_accept) Mix_FreeChunk(ui_accept);
+    if(game_fail) Mix_FreeChunk(game_fail);
+    if(game_pass) Mix_FreeChunk(game_pass);
 
     noteTexture = nullptr;
     l_fontGame = m_fontGame = s_fontGame = nullptr;
@@ -68,10 +73,18 @@ void Skins::loadSkin(int index, SDL_Renderer* renderer){
     skin.s_fontUI   = TTF_OpenFont((skin.path + "/uiinterface.ttf").c_str(), 24);
 
     skin.hitsound1 = Mix_LoadWAV((skin.path + "/hitsound1.wav").c_str());
+    skin.ui_switch = Mix_LoadWAV((skin.path + "/ui_switch.wav").c_str());
+    skin.ui_accept = Mix_LoadWAV((skin.path + "/ui_accept.wav").c_str());
+    skin.game_fail = Mix_LoadWAV((skin.path + "/game_fail.wav").c_str());
+    skin.game_pass = Mix_LoadWAV((skin.path + "/game_pass.wav").c_str());
 
     if(!skin.l_fontGame) std::cerr << "Could not load gameinterface.ttf\n";
     if(!skin.l_fontUI)   std::cerr << "Could not load uiinterface.ttf\n";
     if(!skin.hitsound1)  std::cerr << "Could not load hitsound1.wav\n";
+    if(!skin.ui_switch)  std::cerr << "Could not load ui_switch.wav\n";
+    if(!skin.ui_accept)  std::cerr << "Could not load ui_accept.wav\n";
+    if(!skin.game_fail)  std::cerr << "Could not load game_fail.wav\n";
+    if(!skin.game_pass)  std::cerr << "Could not load game_pass.wav\n";
 
     m_activeSkin = index;
     std::cout << "Loaded skin: " << skin.name << "\n";
