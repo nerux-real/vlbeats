@@ -67,9 +67,9 @@ endif()
 
 if(APPLE)
     target_include_directories(VLBeats PRIVATE /opt/homebrew/include /usr/local/include)
-    set(MACOSX_BUNDLE_ICON_FILE "icon.icns")
-    set_source_files_properties(${CMAKE_SOURCE_DIR}/icon.icns PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
-    target_sources(VLBeats PRIVATE ${CMAKE_SOURCE_DIR}/icon.icns)
+    set(MACOSX_BUNDLE_ICON_FILE "app_icon.icns")
+    set_source_files_properties(${CMAKE_SOURCE_DIR}/app_icon.icns PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+    target_sources(VLBeats PRIVATE ${CMAKE_SOURCE_DIR}/app_icon.icns)
     target_include_directories(LKPacker PRIVATE /opt/homebrew/include /usr/local/include)
 endif()
 
