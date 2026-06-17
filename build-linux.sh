@@ -10,5 +10,5 @@ cd build-linux
 cmake ..
 make 
 if [[ " $* " == *" --run "* ]]; then
-	./Lonkstalk
+	./VLBeats
 fi

@@ -10,8 +10,6 @@ add dynamic resolution change in game. recalculate everything, not hardcoded and
 6.allow people change game layout
 8. editor for making maps (probably additional program like LKPacker LKEditor)
 
-9. LOCAL HISTORY (works, but add displaying in left panel)
-
 map should end after last note 5 seconds with fade out
 
 PROBS BUG TEST!!!

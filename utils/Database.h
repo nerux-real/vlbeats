@@ -2,8 +2,10 @@
 #include <string>
 #include <vector>
 #include "../deps/sqlite3.h"
+#include <SDL2/SDL.h>
 
 struct ScoreEntry {
+    std::string playerName="Guest";
     std::string lkHash;
     std::string difficulty;
     int score;
@@ -15,6 +17,11 @@ struct ScoreEntry {
     int missCounts;
     bool noFail;
     long timestamp;
+
+    std::string displayText;
+    SDL_Texture* tex = nullptr;
+    int texW = 0;
+    int texH = 0;
 };
 
 class Database {

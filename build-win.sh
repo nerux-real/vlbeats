@@ -10,10 +10,10 @@ cd build-win
 cmake .. -G "MinGW Makefiles"
 mingw32-make
 mkdir prod
-cp Lonkstalk.exe prod/VLBeats.exe
+cp VLBeats.exe prod/VLBeats.exe
 cp -r gamestuff/skins prod/skins
 cp -r gamestuff/beatmaps prod/beatmaps
-ldd Lonkstalk.exe | grep '/mingw64/bin/' | awk '{print $3}' | while read -r dll; do
+ldd VLBeats.exe | grep '/mingw64/bin/' | awk '{print $3}' | while read -r dll; do
     cp -u "$dll" prod/
 done
 cp LKPacker.exe prod/LKPacker.exe

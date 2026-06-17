@@ -39,23 +39,41 @@ void Game::updatePointsTexture() {
     SDL_FreeSurface(s);
 }
 
-void Game::renderLoadingScreen() {
+void Game::renderLoadingScreen(float spinAngle){
     SDL_Renderer* renderer = m_window.getRenderer();
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
-    SDL_Surface* s = TTF_RenderText_Solid(m_skins.getActive().l_fontUI, "Loading...", {255,255,255,255});
-    SDL_Texture* t = SDL_CreateTextureFromSurface(renderer, s);
+    int cx = m_settings.resWidth  / 2;
+    int cy = m_settings.resHeight / 2;
 
+    int   numDots  = 10;
+    float radius   = 40.0f;
+    for(int i = 0; i < numDots; i++){
+        float angle = spinAngle + (360.0f / numDots) * i;
+        float rad   = angle * (float)M_PI / 180.0f;
+        int   dx    = cx + (int)(cosf(rad) * radius);
+        int   dy    = cy + (int)(sinf(rad) * radius);
+
+        Uint8 alpha = (Uint8)(255.0f * (i + 1) / numDots);
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, alpha);
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
+        SDL_Rect dot = { dx - 4, dy - 4, 8, 8 };
+        SDL_RenderFillRect(renderer, &dot);
+    }
+
+    SDL_Surface* s = TTF_RenderText_Solid(
+        m_skins.getActive().m_fontUI, "Loading...", {255, 255, 255, 255});
+    SDL_Texture* t = SDL_CreateTextureFromSurface(renderer, s);
     int w, h;
     SDL_QueryTexture(t, nullptr, nullptr, &w, &h);
-    SDL_Rect dst = {960 - w/2, 540 - h/2, w, h};
-
+    SDL_Rect dst = { cx - w/2, cy + 60, w, h };
     SDL_RenderCopy(renderer, t, nullptr, &dst);
-    SDL_RenderPresent(renderer);
-
     SDL_FreeSurface(s);
     SDL_DestroyTexture(t);
+
+    SDL_RenderPresent(renderer);
 }
 
 float Game::getAccuracy(){
@@ -72,36 +90,6 @@ void Game::updateAccuracyTexture(){
     SDL_QueryTexture(m_accuracyTexture, nullptr, nullptr, &m_accuracyW, &m_accuracyH);
     SDL_FreeSurface(s);
 }
-
-// void Game::renderHPBar() {
-//     SDL_Renderer* renderer = m_window.getRenderer();
-
-//     int barW = 500;
-//     int barH = 24;
-//     int barX = m_settings.resWidth / 2 - barW / 2;
-//     int barY = 20;
-
-//     SDL_Rect barBg = { barX, barY, barW, barH };
-//     SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
-//     SDL_RenderFillRect(renderer, &barBg);
-
-//     int fillW = static_cast<int>((m_hp / m_maxHp) * barW);
-
-//     SDL_Rect barFill = { barX, barY, fillW, barH };
-//     float hpPercent = m_hp / m_maxHp;
-
-//     SDL_SetRenderDrawColor(
-//         renderer,
-//         static_cast<Uint8>(m_bgDominantColorInverted.r * hpPercent),
-//         static_cast<Uint8>(m_bgDominantColorInverted.g * hpPercent),
-//         static_cast<Uint8>(m_bgDominantColorInverted.b * hpPercent),
-//         255
-//     );
-//     SDL_RenderFillRect(renderer, &barFill);
-
-//     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-//     SDL_RenderDrawRect(renderer, &barBg);
-// }
 
 void Game::renderHPBar()
 {
@@ -390,48 +378,6 @@ void Game::renderCanSkipIndicator(float songTime){
     }
 }
 
-// void Game::renderVolumeBar(){
-//     if(m_volumeBarTimer <= 0) return;
-
-//     float alpha = 255.0f;
-//     if(m_volumeBarTimer < 500.0f)
-//         alpha = (m_volumeBarTimer / 500.0f) * 255.0f;
-
-//     SDL_Renderer* renderer = m_window.getRenderer();
-//     int barW = 200;
-//     int barH = 20;
-//     int barX = 20;
-//     int barY = m_settings.resHeight - barH - 20;
-
-//     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-
-//     SDL_SetRenderDrawColor(renderer, 0, 0, 0, (Uint8)(150 * alpha/255.0f));
-//     SDL_Rect bg = {barX, barY, barW, barH};
-//     SDL_RenderFillRect(renderer, &bg);
-
-//     float volumePercent = m_settings.master_volume / 100.0f;
-//     int fillW = (int)(barW * volumePercent);
-//     SDL_SetRenderDrawColor(renderer, 255, 255, 255, (Uint8)(200 * alpha/255.0f));
-//     SDL_Rect fill = {barX, barY, fillW, barH};
-//     SDL_RenderFillRect(renderer, &fill);
-
-//     char buf[16];
-//     snprintf(buf, sizeof(buf), "Volume: %d%%", m_settings.master_volume);
-//     SDL_Surface* s = TTF_RenderText_Solid(m_skins.getActive().s_fontUI, buf, {255,255,255,255});
-//     SDL_Texture* t = SDL_CreateTextureFromSurface(renderer, s);
-//     SDL_SetTextureBlendMode(t, SDL_BLENDMODE_BLEND);
-//     SDL_SetTextureAlphaMod(t, (Uint8)alpha);
-//     int tw, th;
-//     SDL_QueryTexture(t, nullptr, nullptr, &tw, &th);
-//     SDL_Rect tdst = {barX + barW/2 - tw/2, barY + barH/2 - th/2, tw, th};
-//     SDL_RenderCopy(renderer, t, nullptr, &tdst);
-//     SDL_FreeSurface(s);
-//     SDL_DestroyTexture(t);
-
-//     //add music and hitsound sliders too, have to aim with cursor on slider, if not aimed, then change master_volume only
-
-// }
-
 void Game::drawSlider(SDL_Renderer* r, int x, int y, int w, int h, float percent, Uint8 alpha){
     percent = std::clamp(percent, 0.0f, 1.0f);
 
@@ -523,11 +469,6 @@ void Game::renderVolumeBar()
 
     SDL_SetRenderDrawBlendMode(r, SDL_BLENDMODE_BLEND);
 
-    // drawSlider(r, barX, barY,       barW, barH, masterP,   alpha);
-    // drawSlider(r, barX, barY - 30,  barW, barH, musicP,    alpha);
-    // drawSlider(r, barX, barY - 60,  barW, barH, hitsoundP, alpha);
-    // drawSlider(r, barX, barY - 90,  barW, barH, uiP,       alpha);
-
     auto drawLabeledSlider = [&](const char* label, int y, float percent) {
         SDL_Surface* ls = TTF_RenderText_Solid(m_skins.getActive().s_fontUI, label, {200,200,200,255});
         SDL_Texture* lt = SDL_CreateTextureFromSurface(r, ls);
@@ -559,6 +500,201 @@ void Game::renderVolumeBar()
     SDL_DestroyTexture(t);
 }
 
+// void Game::renderGameplayScores(){
+//     if (!m_showGameplayScores)
+//         return;
+
+//     SDL_Renderer* r = m_window.getRenderer();
+
+//     int screenW, screenH;
+//     SDL_GetRendererOutputSize(r, &screenW, &screenH);
+
+//     int x = 40;
+//     int y = screenH / 2 - 60;
+
+//     struct ScoreEntryGameplay {
+//         std::string name;
+//         int score;
+//         float acc;
+//         int combo;
+//     };
+
+//     std::vector<ScoreEntryGameplay> entries;
+
+//     int count = std::min((int)m_scores.size(), 3);
+
+//     for(int i = 0; i < count; i++){
+//         auto s = m_scores[i];
+//         entries.push_back({
+//             s.playerName,
+//             s.score,
+//             s.accuracy,
+//             s.maxCombo
+//         });
+//     }
+
+//     entries.push_back({
+//         "Guest",
+//         (int)m_points,
+//         getAccuracy(),
+//         m_maxCombo
+//     });
+
+//     std::sort(entries.begin(), entries.end(),
+//         [](const auto& a, const auto& b){
+//             return a.score > b.score;
+//         }
+//     );
+
+//     int maxEntries = std::min((int)entries.size(), 4);
+
+//     for (int i = 0; i < maxEntries; i++) {
+//         const auto& e = entries[i];
+
+//         std::string line =
+//             std::to_string(i+1) + ". " +
+//             e.name + "   " +
+//             std::to_string(e.score) + "   " +
+//             std::to_string((int)e.acc) + "%   " +
+//             std::to_string(e.combo) + "x";
+
+//         SDL_Color col = {255, 255, 255, (Uint8)m_gameplayScoresAlpha};
+
+//         SDL_Surface* surf = TTF_RenderUTF8_Blended(m_skins.getActive().s_fontUI, line.c_str(), col);
+//         if (!surf) continue;
+
+//         SDL_Texture* tex = SDL_CreateTextureFromSurface(r, surf);
+//         SDL_FreeSurface(surf);
+//         if (!tex) continue;
+
+//         int w, h;
+//         SDL_QueryTexture(tex, nullptr, nullptr, &w, &h);
+
+//         SDL_Rect dst = { x, y + i * 40, w, h };
+//         SDL_RenderCopy(r, tex, nullptr, &dst);
+
+//         SDL_DestroyTexture(tex);
+//     }
+// }
+
+void Game::renderGameplayScores(){
+    if (!m_showGameplayScores)
+        return;
+
+    SDL_Renderer* r = m_window.getRenderer();
+
+    SDL_SetRenderDrawBlendMode(r, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(r, 0, 0, 0, 120);
+    SDL_Rect panel = { 20, m_settings.resHeight/2 - 90, 420, 180 };
+    SDL_RenderFillRect(r, &panel);
+
+    for (int i = 0; i < (int)m_gameplayScoreRows.size(); i++) {
+        const auto& e = m_gameplayScoreRows[i];
+
+        std::string line =
+            std::to_string(i+1) + ". " +
+            e.name + "   " +
+            std::to_string(e.score) + "   " +
+            std::to_string((int)e.acc) + "%   " +
+            std::to_string(e.combo) + "x";
+
+        SDL_Color col;
+        if (e.isPlayer) {
+            col = { 180, 220, 255, (Uint8)e.alpha };
+        } else {
+            col = { 230, 230, 230, (Uint8)e.alpha };
+        }
+
+        SDL_Surface* surf = TTF_RenderUTF8_Blended(m_skins.getActive().s_fontUI, line.c_str(), col);
+        if (!surf) continue;
+
+        SDL_Texture* tex = SDL_CreateTextureFromSurface(r, surf);
+        SDL_FreeSurface(surf);
+        if (!tex) continue;
+
+        int w, h;
+        SDL_QueryTexture(tex, nullptr, nullptr, &w, &h);
+
+        SDL_Rect dst = { (int)e.x, (int)e.y, w, h };
+        SDL_RenderCopy(r, tex, nullptr, &dst);
+
+        SDL_DestroyTexture(tex);
+    }
+}
+
+
+void Game::updateGameplayScores(float deltaMs) {
+    if (!m_showGameplayScores) return;
+
+    int screenW, screenH;
+    SDL_GetRendererOutputSize(m_window.getRenderer(), &screenW, &screenH);
+
+    int baseX = 40;
+    int baseY = screenH / 2 - 60;
+
+    struct TempEntry {
+        std::string name;
+        int score;
+        float acc;
+        int combo;
+        bool isPlayer;
+    };
+
+    std::vector<TempEntry> entries;
+
+    int count = std::min((int)m_scores.size(), 3);
+    for (int i = 0; i < count; i++) {
+        auto s = m_scores[i];
+        entries.push_back({ s.playerName, s.score, s.accuracy, s.maxCombo, false });
+    }
+
+    entries.push_back({ "Guest", (int)m_points, getAccuracy(), m_maxCombo, true });
+
+    std::sort(entries.begin(), entries.end(),
+        [](const auto& a, const auto& b){ return a.score > b.score; });
+
+    int maxEntries = std::min((int)entries.size(), 4);
+
+    if (m_gameplayScoreRows.empty()) {
+        m_gameplayScoreRows.resize(maxEntries);
+
+        for (int i = 0; i < maxEntries; i++) {
+            auto& row = m_gameplayScoreRows[i];
+            const auto& e = entries[i];
+
+            row.name   = e.name;
+            row.score  = e.score;
+            row.acc    = e.acc;
+            row.combo  = e.combo;
+            row.isPlayer = e.isPlayer;
+
+            row.y       = baseY + i * 40;
+            row.x       = -300.0f;
+            row.targetX = (float)baseX;
+            row.alpha   = 0.0f;
+        }
+    }
+    else {
+        for (int i = 0; i < maxEntries; i++) {
+            auto& row = m_gameplayScoreRows[i];
+            const auto& e = entries[i];
+
+            row.name   = e.name;
+            row.score  = e.score;
+            row.acc    = e.acc;
+            row.combo  = e.combo;
+            row.isPlayer = e.isPlayer;
+        }
+    }
+
+    m_gameplayScoresAlpha = std::min(255.0f, m_gameplayScoresAlpha + deltaMs * 0.6f);
+
+    float speed = 10.0f;
+    for (auto& row : m_gameplayScoreRows) {
+        row.alpha = m_gameplayScoresAlpha;
+        row.x += (row.targetX - row.x) * speed * (deltaMs / 1000.0f);
+    }
+}
 
 void Game::computeLayout() {
     int playAreW = (int)(m_settings.resWidth * 0.7f);
@@ -595,34 +731,68 @@ void Game::calculateVolume() {
 
 bool Game::init(){
     m_settings.load("./settings.ini");
-    m_loading=true;
-    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)!=0){
-        std::cerr<<SDL_GetError()<<std::endl;
+    m_loading = true;
+
+    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0){
+        std::cerr << SDL_GetError() << std::endl;
         return false;
     }
-    if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048)!=0){
-        std::cerr<<Mix_GetError()<<std::endl;
+    if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) != 0){
+        std::cerr << Mix_GetError() << std::endl;
         return false;
     }
-    if(TTF_Init()!=0){
-        std::cerr<<TTF_GetError()<<std::endl;
+    if(TTF_Init() != 0){
+        std::cerr << TTF_GetError() << std::endl;
         return false;
     }
-    if(!m_window.init("Lonkstalk", m_settings.resWidth, m_settings.resHeight, m_settings.fpsLock, m_settings.videoMode)) return false;
+
+    std::string windowTitle = "VLBeats Alpha " + m_version;
+    if(!m_window.init(windowTitle.c_str(), m_settings.resWidth, m_settings.resHeight, m_settings.fpsLock, m_settings.videoMode))
+        return false;
+
     computeLayout();
+
+    m_app_icon = IMG_Load("assets/app_icon.png");
+    SDL_SetWindowIcon(m_window.getWindow(), m_app_icon);
+    SDL_FreeSurface(m_app_icon);
+
     m_skins.scanSkins("./skins");
-    m_skins.loadSkin(0, m_window.getRenderer()); //default pirmo
+    m_skins.loadSkin(0, m_window.getRenderer());
     m_debug.init(m_skins.getActive().m_fontUI, m_window.getRenderer());
-    if(m_settings.debug){
-        m_debug.hook();
-    }
+    if(m_settings.debug) m_debug.hook();
+
     m_database.init("./scores.db");
-    //m_discordRPC.init("1515437675111387178");
-    //m_discordRPC.update("In Menus", "Browsing songs");
-    m_lastTick=SDL_GetPerformanceCounter();
-    m_loading=false;
-    m_running=true;
-    scanBeatmaps();
+    m_discordRPC.init("1515437675111387178");
+    m_discordRPC.update("In Menus", "Browsing songs");
+    m_lastTick = SDL_GetPerformanceCounter();
+
+    std::atomic<bool> scanDone{false};
+    std::thread scanThread([&](){
+        scanBeatmaps();
+        scanDone = true;
+    });
+
+    float spinAngle = 0.0f;
+    Uint64 lastTick = SDL_GetPerformanceCounter();
+
+    while(!scanDone){
+        Uint64 now = SDL_GetPerformanceCounter();
+        float deltaMs = (float)(now - lastTick) / SDL_GetPerformanceFrequency() * 1000.0f;
+        lastTick = now;
+        spinAngle += deltaMs * 0.2f;
+        if(spinAngle > 360.0f) spinAngle -= 360.0f;
+
+        SDL_Event e;
+        while(SDL_PollEvent(&e))
+            if(e.type == SDL_QUIT){ scanThread.join(); return false; }
+
+        renderLoadingScreen(spinAngle);
+    }
+
+    scanThread.join();
+
+    m_loading = false;
+    m_running = true;
     return true;
 }
 
@@ -637,13 +807,14 @@ void Game::scanBeatmaps(){
         Beatmap temp;
         temp.loadMetaFromLk(entry.path().string().c_str());
         SongEntry song;
-        song.lkPath    = entry.path().string();
-        song.name      = temp.name;
-        song.author    = temp.author;
-        song.bpm       = temp.bpm;
+        song.lkPath = entry.path().string();
+        song.name = temp.name;
+        song.author = temp.author;
+        song.bpm = temp.bpm;
         song.difficulties = temp.difficulties;
         temp.loadBackgroundOnly(entry.path().string().c_str());
         song.bgPath = temp.bg_path;
+        song.hash = sha256File(entry.path().string());
         m_songList.push_back(song);
     }
     std::cout<<"Found "<<m_songList.size()<<" beatmaps"<<std::endl;
@@ -669,17 +840,28 @@ void Game::startGame(const std::string &path, const std::string &difficulty){
         }
     }
 
-    m_mapDuration = 0.0f;
-    for(auto& note : m_beatmap.notes){
-        float end = note.type == NoteType::Slider ? note.endTimestampMs : note.timestampMs;
-        if(end > m_mapDuration) m_mapDuration = end;
-    }
-    m_mapDuration += 3000.0f;
+    // m_mapDuration = 0.0f;
+    // for(auto& note : m_beatmap.notes){
+    //     float end = note.type == NoteType::Slider ? note.endTimestampMs : note.timestampMs;
+    //     if(end > m_mapDuration) m_mapDuration = end;
+    // }
+    // m_mapDuration += 3000.0f;
 
-    // m_discordRPC.update(
-    //     m_beatmap.name + " [" + difficulty + "]",
-    //     "Playing"
-    // );
+    m_lastNoteTime = 0.0f;
+
+    for (auto& note : m_beatmap.notes) {
+        float end = (note.type == NoteType::Slider)
+            ? note.endTimestampMs
+            : note.timestampMs;
+
+        if (end > m_lastNoteTime)
+            m_lastNoteTime = end;
+    }
+
+    m_discordRPC.update(
+        m_beatmap.name + " [" + difficulty + "]",
+        "Playing"
+    );
 
     if(m_previewPlaying){
         Mix_FadeOutMusic(300);
@@ -741,6 +923,11 @@ void Game::startGame(const std::string &path, const std::string &difficulty){
     m_saveScore = true;
     m_changed = true;
     m_failed = false;
+    m_gameplayScoreRows.clear();
+    m_showGameplayScores = false;
+    m_gameplayScoresAlpha = 0.0f;
+    m_mapEndTimer = -1.0f;
+    m_mapFadeAlpha = 0.0f;
     updateComboTexture();
     updatePointsTexture();
     updateAccuracyTexture();
@@ -845,7 +1032,30 @@ void Game::renderCountdown(){
 void Game::updateSongSelectMenu(float deltaMs){
     m_debug.update(deltaMs);
 
-    if(m_selectedSong != m_lastSelectedSong){
+    // if(m_selectedSong != m_lastSelectedSong){
+    //     m_lastSelectedSong = m_selectedSong;
+    //     m_previewTimer = 500.0f;
+    //     m_previewFade = 0.0f;
+    //     m_previewPlayTime = 0.0f;
+    //     if(m_previewPlaying){
+    //         Mix_FadeOutMusic(300);
+    //         m_previewPlaying = false;
+    //     }
+
+    //     if(m_menuBgTexture){ SDL_DestroyTexture(m_menuBgTexture); m_menuBgTexture = nullptr; }
+    //     Beatmap temp;
+    //     temp.loadBackgroundOnly(m_songList[m_selectedSong].lkPath.c_str());
+    //     if(!temp.bg_path.empty()){
+    //         SDL_Surface* s = IMG_Load(temp.bg_path.c_str());
+    //         if(s){
+    //             m_menuBgTexture = SDL_CreateTextureFromSurface(m_window.getRenderer(), s);
+    //             SDL_SetTextureBlendMode(m_menuBgTexture, SDL_BLENDMODE_NONE);
+    //             SDL_FreeSurface(s);
+    //         }
+    //     }
+    // }
+
+        if(m_selectedSong != m_lastSelectedSong){
         m_lastSelectedSong = m_selectedSong;
         m_previewTimer = 500.0f;
         m_previewFade = 0.0f;
@@ -855,15 +1065,51 @@ void Game::updateSongSelectMenu(float deltaMs){
             m_previewPlaying = false;
         }
 
-        if(m_menuBgTexture){ SDL_DestroyTexture(m_menuBgTexture); m_menuBgTexture = nullptr; }
-        Beatmap temp;
-        temp.loadBackgroundOnly(m_songList[m_selectedSong].lkPath.c_str());
-        if(!temp.bg_path.empty()){
-            SDL_Surface* s = IMG_Load(temp.bg_path.c_str());
-            if(s){
-                m_menuBgTexture = SDL_CreateTextureFromSurface(m_window.getRenderer(), s);
-                SDL_SetTextureBlendMode(m_menuBgTexture, SDL_BLENDMODE_NONE);
-                SDL_FreeSurface(s);
+        if(m_menuBgTexture){
+            SDL_DestroyTexture(m_menuBgTexture);
+            m_menuBgTexture = nullptr;
+        }
+
+        const std::string& bgPath = m_songList[m_selectedSong].bgPath;
+        if(!bgPath.empty()){
+            SDL_Surface* raw = IMG_Load(bgPath.c_str());
+            if(raw){
+                const int targetW = PANEL_SPLIT;
+                const int targetH = 200;
+
+                float scaleH = (float)targetH / raw->h;
+                int scaledW  = (int)(raw->w * scaleH);
+                int scaledH  = targetH;
+
+                if(scaledW < targetW){
+                    float scaleW = (float)targetW / raw->w;
+                    scaledW = targetW;
+                    scaledH = (int)(raw->h * scaleW);
+                }
+
+                SDL_Rect srcCrop = {
+                    (raw->w - (int)(targetW / (scaledW > 0 ? (float)scaledW / raw->w : 1.0f))) / 2,
+                    (raw->h - (int)(targetH / (scaledH > 0 ? (float)scaledH / raw->h : 1.0f))) / 2,
+                    (int)(targetW * (float)raw->w / scaledW),
+                    (int)(targetH * (float)raw->h / scaledH)
+                };
+
+                srcCrop.x = std::max(0, std::min(srcCrop.x, raw->w - 1));
+                srcCrop.y = std::max(0, std::min(srcCrop.y, raw->h - 1));
+                srcCrop.w = std::min(srcCrop.w, raw->w - srcCrop.x);
+                srcCrop.h = std::min(srcCrop.h, raw->h - srcCrop.y);
+
+                SDL_Surface* cropped = SDL_CreateRGBSurfaceWithFormat(
+                    0, targetW, targetH, 32, raw->format->format);
+
+                if(cropped){
+                    SDL_BlitScaled(raw, &srcCrop, cropped, nullptr);
+                    m_menuBgTexture = SDL_CreateTextureFromSurface(
+                        m_window.getRenderer(), cropped);
+                    SDL_SetTextureBlendMode(m_menuBgTexture, SDL_BLENDMODE_BLEND);
+                    SDL_FreeSurface(cropped);
+                }
+                SDL_FreeSurface(raw);
             }
         }
     }
@@ -913,8 +1159,6 @@ void Game::updateSongSelectMenu(float deltaMs){
             m_previewFade = 1.0f - t;
         }
 
-        // int vol = (int)(m_previewFade * MIX_MAX_VOLUME / 100 * m_settings.music_volume);
-        // Mix_VolumeMusic(vol);
         int vol = (int)(
             m_previewFade *
             MIX_MAX_VOLUME *
@@ -936,9 +1180,18 @@ void Game::renderSongSelectLeft(){
     SDL_Color dimColor = {180, 180, 180, 255};
 
     int bannerH = 200;
+    // if(m_menuBgTexture){
+    //     SDL_Rect bannerDst = {0, 0, PANEL_SPLIT, bannerH};
+    //     SDL_RenderCopy(renderer, m_menuBgTexture, nullptr, &bannerDst);
+    //     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 100);
+    //     SDL_RenderFillRect(renderer, &bannerDst);
+    // }
+
     if(m_menuBgTexture){
-        SDL_Rect bannerDst = {0, 0, PANEL_SPLIT, bannerH};
+        SDL_Rect bannerDst = {0, 0, PANEL_SPLIT, 200};
         SDL_RenderCopy(renderer, m_menuBgTexture, nullptr, &bannerDst);
+
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 100);
         SDL_RenderFillRect(renderer, &bannerDst);
     }
@@ -963,7 +1216,75 @@ void Game::renderSongSelectLeft(){
         SDL_DestroyTexture(t);
         y += h + 10;
     }
+
+    int tabY = y + 10;
+    int tabH = 30;
+
+    SDL_Rect localTab = {20, tabY, 100, tabH};
+    SDL_Rect globalTab = {130, tabY, 100, tabH};
+
+    auto drawTab = [&](SDL_Rect r, const char* label, bool active){
+        SDL_SetRenderDrawColor(renderer,
+            active ? 70 : 50,
+            active ? 70 : 50,
+            active ? 70 : 50,
+            255
+        );
+        SDL_RenderFillRect(renderer, &r);
+
+        SDL_Color c = active ? color : dimColor;
+        SDL_Surface* s = TTF_RenderText_Solid(m_skins.getActive().m_fontUI, label, c);
+        SDL_Texture* t = SDL_CreateTextureFromSurface(renderer, s);
+        int w, h;
+        SDL_QueryTexture(t, nullptr, nullptr, &w, &h);
+        SDL_Rect dst = {r.x + (r.w - w)/2, r.y + (r.h - h)/2, w, h};
+        SDL_RenderCopy(renderer, t, nullptr, &dst);
+        SDL_FreeSurface(s);
+        SDL_DestroyTexture(t);
+    };
+
+    drawTab(localTab, "Local",  m_activeScoreTab == 0);
+    drawTab(globalTab, "Global", m_activeScoreTab == 1);
+
+    y = tabY + tabH + 10;
+
+    int listTop = y;
+    int listBottom = m_settings.resHeight - 20;
+    int entryH = 28;
+
+    int maxVisible = (listBottom - listTop) / entryH;
+
+    if(m_scoreScroll < 0) m_scoreScroll = 0;
+    if(m_scoreScroll > (int)m_scores.size() - maxVisible)
+        m_scoreScroll = std::max(0, (int)m_scores.size() - maxVisible);
+
+    SDL_Rect clip = {20, listTop, PANEL_SPLIT - 40, listBottom - listTop};
+    SDL_RenderSetClipRect(renderer, &clip);
+
+    int drawY = listTop;
+
+    for(int i = m_scoreScroll; i < (int)m_scores.size() && i < m_scoreScroll + maxVisible; i++){
+        const auto& sc = m_scores[i];
+
+        SDL_Rect dst = {25, drawY, sc.texW, sc.texH};
+        SDL_RenderCopy(renderer, sc.tex, nullptr, &dst);
+
+        drawY += entryH;
+    }
+
+    SDL_RenderSetClipRect(renderer, nullptr);
+
+    if(m_scores.size() > maxVisible){
+        float ratio = (float)maxVisible / (float)m_scores.size();
+        int barH = ratio * (listBottom - listTop);
+        int barY = listTop + (float)m_scoreScroll / m_scores.size() * (listBottom - listTop);
+
+        SDL_Rect bar = {PANEL_SPLIT - 15, barY, 8, barH};
+        SDL_SetRenderDrawColor(renderer, 120, 120, 120, 255);
+        SDL_RenderFillRect(renderer, &bar);
+    }
 }
+
 
 void Game::renderSongSelectRight(){
     SDL_Renderer* renderer = m_window.getRenderer();
@@ -1019,46 +1340,108 @@ void Game::renderSongSelectMenu(){
 }
 
 void Game::handleSongSelectInput(SDL_Keycode key){
-    if(key == SDLK_UP){
-        if(m_skins.getActive().ui_switch){
-            Mix_PlayChannel(1, m_skins.getActive().ui_switch, 0);
-        }
-        if(m_selectedSong > 0){ 
+    bool changed = false;
+
+    auto& skin = m_skins.getActive();
+
+    // UP
+    if (key == SDLK_UP) {
+        if (m_selectedSong > 0) {
             m_selectedSong--;
             m_selectedDifficulty = 0;
+            changed = true;
+            if (skin.ui_switch) Mix_PlayChannel(1, skin.ui_switch, 0);
         }
-    } else if(key == SDLK_DOWN){
-        if(m_skins.getActive().ui_switch){
-            Mix_PlayChannel(1, m_skins.getActive().ui_switch, 0);
-        }
-        if(m_selectedSong < (int)m_songList.size() - 1){
+    }
+
+    // DOWN
+    else if (key == SDLK_DOWN) {
+        if (m_selectedSong < (int)m_songList.size() - 1) {
             m_selectedSong++;
             m_selectedDifficulty = 0;
+            changed = true;
+            if (skin.ui_switch) Mix_PlayChannel(1, skin.ui_switch, 0);
         }
-    } else if(key == SDLK_LEFT){
-        if(m_skins.getActive().ui_switch){
-            Mix_PlayChannel(1, m_skins.getActive().ui_switch, 0);
+    }
+
+    // LEFT (difficulty)
+    else if (key == SDLK_LEFT) {
+        if (m_selectedDifficulty > 0) {
+            m_selectedDifficulty--;
+            changed = true;
+            if (skin.ui_switch) Mix_PlayChannel(1, skin.ui_switch, 0);
         }
-        if(m_selectedDifficulty > 0) m_selectedDifficulty--;
-    } else if(key == SDLK_RIGHT){
-        if(m_skins.getActive().ui_switch){
-            Mix_PlayChannel(1, m_skins.getActive().ui_switch, 0);
-        }
-        if(m_selectedDifficulty < (int)m_songList[m_selectedSong].difficulties.size() - 1)
+    }
+
+    // RIGHT (difficulty)
+    else if (key == SDLK_RIGHT) {
+        int maxDiff = (int)m_songList[m_selectedSong].difficulties.size() - 1;
+        if (m_selectedDifficulty < maxDiff) {
             m_selectedDifficulty++;
-    } else if(key == SDLK_RETURN || key == SDLK_KP_ENTER){
-        if(m_skins.getActive().ui_accept){
-            Mix_PlayChannel(1, m_skins.getActive().ui_accept, 0);
+            changed = true;
+            if (skin.ui_switch) Mix_PlayChannel(1, skin.ui_switch, 0);
         }
-        startGame(m_songList[m_selectedSong].lkPath, m_songList[m_selectedSong].difficulties[m_selectedDifficulty]);
+    }
+
+    // ENTER — start game
+    else if (key == SDLK_RETURN || key == SDLK_KP_ENTER) {
+        if (skin.ui_accept) Mix_PlayChannel(1, skin.ui_accept, 0);
+        startGame(
+            m_songList[m_selectedSong].lkPath,
+            m_songList[m_selectedSong].difficulties[m_selectedDifficulty]
+        );
+        return;
+    }
+
+    //Score load
+    if (changed) {
+        std::string cacheKey = getScoreCacheKey();
+
+        if (m_scoreCache.find(cacheKey) == m_scoreCache.end()) {
+            auto& entries = m_scoreCache[cacheKey];
+
+            m_database.getScores(
+                m_songList[m_selectedSong].hash,
+                m_songList[m_selectedSong].difficulties[m_selectedDifficulty],
+                entries
+            );
+
+            for (auto& sc : entries) {
+                char accBuf[16];
+                std::snprintf(accBuf, sizeof(accBuf), "%.2f", sc.accuracy);
+                sc.displayText = sc.playerName + " - " +
+                                std::to_string(sc.score) + " pts - " +
+                                accBuf + "% - " + sc.grade + " - " +
+                                std::to_string(sc.maxCombo) + "x";
+                if (sc.noFail) sc.displayText += " (NF)";
+
+                SDL_Surface* s = TTF_RenderText_Solid(
+                    m_skins.getActive().s_fontUI,
+                    sc.displayText.c_str(),
+                    {255, 255, 255, 255}
+                );
+                sc.tex = SDL_CreateTextureFromSurface(m_window.getRenderer(), s);
+                SDL_QueryTexture(sc.tex, nullptr, nullptr, &sc.texW, &sc.texH);
+                SDL_FreeSurface(s);
+            }
+        }
+
+        m_scores = m_scoreCache[cacheKey];
     }
 }
+
 
 void Game::updateGameplay(float deltaMs){
     if(Mix_GetMusicPosition(m_music) < 0 || !Mix_PlayingMusic()){
         endMap();
         return;
     }
+    if (m_visualTime >= m_lastNoteTime + 5000.0f) {
+        if (m_mapEndTimer < 0.0f) {
+            m_mapEndTimer = 0.0f;
+        }
+    }
+    
     m_debug.update(deltaMs);
     m_visualTime += deltaMs;
     m_syncTimer -= deltaMs;
@@ -1074,13 +1457,25 @@ void Game::updateGameplay(float deltaMs){
 
     if(m_milestoneTimer > 0) m_milestoneTimer -= deltaMs;
 
-    m_hp-=HP_DRAIN_RATE*(deltaMs/1000.0f);
+    if(m_mapEndTimer==-1){
+        m_hp-=HP_DRAIN_RATE*(deltaMs/1000.0f);
+    }
     if(m_hp < 0.0f) m_hp = 0.0f;
     if(m_hp == 0.0f && !m_noFail){
         m_failed = true;
         m_saveScore = false;
         endMap();
         return;
+    }
+
+    if (m_mapEndTimer >= 0.0f) {
+        m_mapEndTimer += deltaMs;
+        m_mapFadeAlpha = std::min(255.0f, m_mapEndTimer * 0.255f);
+
+        if (m_mapFadeAlpha >= 255.0f) {
+            endMap();
+            return;
+        }
     }
 
     if(m_hp < 30.0f){
@@ -1154,6 +1549,8 @@ void Game::updateGameplay(float deltaMs){
             m_displayPoints += diff * 0.15f;
         updatePointsTexture();
     }
+
+    updateGameplayScores(deltaMs);
 }
 
 void Game::renderGameplay(){
@@ -1328,7 +1725,15 @@ void Game::renderGameplay(){
     renderComboMilestone();
     renderHpPulseEffect();
     renderTimerDisplay();
+    renderGameplayScores();
     renderCanSkipIndicator(songTime);
+
+    if (m_mapEndTimer >= 0.0f) {
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, (Uint8)m_mapFadeAlpha);
+        SDL_Rect full = {0, 0, m_settings.resWidth, m_settings.resHeight};
+        SDL_RenderFillRect(renderer, &full);
+    }
 }
 
 void Game::updateResults(float deltaMs){
@@ -1394,36 +1799,34 @@ void Game::endMap(){
     int accInt = (int)getAccuracy();
     std::string grade = getGrade();
 
-    // Save the score to the database
-    ScoreEntry entry;
-    entry.lkHash = sha256File(m_songList[m_selectedSong].lkPath);
-    std::cout<<"Hash: "<<entry.lkHash<<std::endl;
-    std::cout<<m_songList[m_selectedSong].lkPath<<std::endl;
     if(m_saveScore){
+        ScoreEntry entry;
+        entry.lkHash     = m_songList[m_selectedSong].hash;
         entry.difficulty = m_songList[m_selectedSong].difficulties[m_selectedDifficulty];
-        entry.score = m_points;
-        entry.accuracy = getAccuracy();
-        entry.maxCombo = m_maxCombo;
-        entry.grade = grade;
+        entry.score      = m_points;
+        entry.accuracy   = getAccuracy();
+        entry.maxCombo   = m_maxCombo;
+        entry.grade      = grade;
         entry.excellentCounts = m_excellentHits;
-        entry.goodCounts = m_goodHits;
-        entry.missCounts = m_misses;
-        entry.noFail = m_noFail;
+        entry.goodCounts      = m_goodHits;
+        entry.missCounts      = m_misses;
+        entry.noFail          = m_noFail;
+
         m_database.saveScore(entry);
-        if(m_skins.getActive().game_pass){
+        m_scoreCache.erase(entry.lkHash + "|" + entry.difficulty);
+
+        if(m_skins.getActive().game_pass)
             Mix_PlayChannel(1, m_skins.getActive().game_pass, 0);
-        }
     } else {
-        if(m_skins.getActive().game_fail){
+        if(m_skins.getActive().game_fail)
             Mix_PlayChannel(1, m_skins.getActive().game_fail, 0);
-        }
     }
 
-    // m_discordRPC.update(
-    //     m_beatmap.name + " [" + m_songList[m_selectedSong].difficulties[m_selectedDifficulty] + "]",
-    //     std::to_string(accInt) + "% - " + grade + " Grade"
-    // );
-
+    m_discordRPC.update(
+        m_beatmap.name + " [" + m_songList[m_selectedSong].difficulties[m_selectedDifficulty] + "]",
+        std::to_string(accInt) + "% - " + grade + " Grade"
+    );
+    m_showGameplayScores = false;
     m_state = GameState::Results;
 }
 
@@ -1470,6 +1873,10 @@ void Game::run(){
                         Mix_SetMusicPosition(m_skipTargetTime/1000.0f);
                         m_visualTime = m_skipTargetTime;
                         m_canSkip = false;
+                    } else if(m_event.key.keysym.sym == SDLK_TAB){
+                        m_gameplayScoresAlpha = 0.0f;
+                        m_showGameplayScores = !m_showGameplayScores;
+                        m_gameplayScoreRows.clear();
                     }
                     else handleInput(m_event.key.keysym.sym, m_visualTime);
                 else if(m_state == GameState::SongSelectMenu){
@@ -1477,6 +1884,9 @@ void Game::run(){
                     else if(m_event.key.keysym.sym == SDLK_SPACE){
                         std::cout<<"No Fail: "<<(m_noFail ? "OFF" : "ON")<<std::endl;
                         m_noFail = !m_noFail;
+                    } else if(m_event.key.keysym.sym == SDLK_TAB){
+                        if(m_skins.getActive().ui_switch) Mix_PlayChannel(1, m_skins.getActive().ui_switch, 0);
+                        m_activeScoreTab = (m_activeScoreTab + 1) % 2;
                     } else {
                         handleSongSelectInput(m_event.key.keysym.sym);
                     }
@@ -1513,7 +1923,7 @@ void Game::run(){
         }
 
         m_debug.render(renderer);
-        //m_discordRPC.runCallbacks();
+        m_discordRPC.runCallbacks();
         renderFPSCounter();
         renderVolumeBar();
         SDL_RenderPresent(renderer);
@@ -1536,12 +1946,16 @@ void Game::backToSongSelect(){
     m_displayPoints = 0.0f;
     m_hitErrors.clear();
     m_state = GameState::SongSelectMenu;
-    //m_discordRPC.update("In Menus", "Browsing songs");
+    m_discordRPC.update("In Menus", "Browsing songs");
 }
 
 void Game::shutdown(){
-    //m_discordRPC.shutdown();
+    m_discordRPC.shutdown();
     m_settings.save("./settings.ini");
+    for (auto& [key, entries] : m_scoreCache)
+        for (auto& sc : entries)
+            if (sc.tex) SDL_DestroyTexture(sc.tex);
+    m_scoreCache.clear();
     for(auto& pair:m_letterTextures) SDL_DestroyTexture(pair.second);
     SDL_DestroyTexture(m_judgmentTexture);
     SDL_DestroyTexture(m_comboTexture);
@@ -1621,7 +2035,8 @@ void Game::handleInput(SDL_Keycode key, float songTime){
         if(m_combo>m_maxCombo) m_maxCombo = m_combo;
         m_excellentHits++;
         m_hp=std::min(m_maxHp, m_hp+HP_EXCELLENT_ADD);
-        m_points += 300 * m_combo;
+        if(!m_noFail) m_points += 300 * m_combo;
+        else m_points += 150 * m_combo;
     } else if(bestDiff <= GOOD_WINDOW_MS){
         Mix_PlayChannel(-1, m_skins.getActive().hitsound1, 0);
         m_judgmentText = "GOOD";
@@ -1630,7 +2045,8 @@ void Game::handleInput(SDL_Keycode key, float songTime){
         if(m_combo>m_maxCombo) m_maxCombo = m_combo;
         m_goodHits++;
         m_hp=std::min(m_maxHp, m_hp+HP_GOOD_ADD);
-        m_points += 100 * m_combo;
+        if(!m_noFail) m_points += 100 * m_combo;
+        else m_points += 50 * m_combo;
     } else {
         //miss sound here??
         m_judgmentText = "MISS";
@@ -1671,7 +2087,8 @@ void Game::handleKeyUp(SDL_Keycode key, float songTime){
             if(m_combo > m_maxCombo) m_maxCombo = m_combo;
             m_excellentHits++;
             m_hp = std::min(m_maxHp, m_hp + HP_EXCELLENT_ADD);
-            m_points += 300 * m_combo;
+            if(!m_noFail) m_points += 300 * m_combo;
+            else m_points += 150 * m_combo;
         } else if(std::abs(diff) <= GOOD_WINDOW_MS){
             m_judgmentText = "GOOD";
             m_judgementColor = {0,128,0,255};
@@ -1679,7 +2096,8 @@ void Game::handleKeyUp(SDL_Keycode key, float songTime){
             if(m_combo > m_maxCombo) m_maxCombo = m_combo;
             m_goodHits++;
             m_hp = std::min(m_maxHp, m_hp + HP_GOOD_ADD);
-            m_points += 100 * m_combo;
+            if(!m_noFail) m_points += 100 * m_combo;
+            else m_points += 50 * m_combo;
         } else {
             m_judgmentText = "MISS";
             m_judgementColor = {255,0,0,255};

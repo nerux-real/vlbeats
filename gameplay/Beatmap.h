@@ -17,7 +17,6 @@ public:
     int bpm;
     std::vector<Note> notes;
     std::vector<std::string> difficulties;
-    void load(const char *folder); //legacy loader from folder
     void loadFromLk(const char *lkPath, const std::string &difficulty);
     void loadMetaFromLk(const char *lkPath);
     void unloadMap();

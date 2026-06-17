@@ -13,9 +13,11 @@
 #include "../gameplay/ParticleSystem.h"
 #include "../utils/Settings.h"
 #include "../gameplay/Skins.h"
-// #include "../utils/DiscordRPC.h"
+#include "../utils/DiscordRPC.h"
 #include "../utils/Hash.h"
 #include "../utils/Database.h"
+#include <atomic>
+#include <thread>
 
 namespace fs = std::filesystem;
 
@@ -35,6 +37,7 @@ struct SongEntry {
     std::string bgPath;
     int bpm;
     std::vector<std::string> difficulties;
+    std::string hash;
 };
 
 struct HitError {
@@ -52,6 +55,19 @@ enum class GameState {
     Results
 };
 
+struct GameplayScoreRow {
+    std::string name;
+    int score;
+    float acc;
+    int combo;
+    bool isPlayer = false;
+
+    float x;
+    float y;
+    float targetX;
+    float alpha;
+};
+
 class Game {
 public:
     bool init();
@@ -65,7 +81,6 @@ public:
     void updateJudgmentTexture();
     void updateComboTexture();
     void updatePointsTexture();
-    void renderLoadingScreen();
     void updateAccuracyTexture();
     float getAccuracy();
     void renderHPBar();
@@ -96,6 +111,9 @@ public:
     void renderGameplay();
     void updateResults(float deltaMs);
     void renderResults();
+    void renderScoresList();
+    void renderGameplayScores();
+    void updateGameplayScores(float deltaMs);
 
     void renderVolumeBar();
 
@@ -106,7 +124,20 @@ public:
     void onMouseDown(int mx, int my);
     void onMouseUp();
     void onMouseMove(int mx);
+
+    std::string getScoreCacheKey() {
+        return m_songList[m_selectedSong].hash + "|" +
+            m_songList[m_selectedSong].difficulties[m_selectedDifficulty];
+    }
+
+    void renderLoadingScreen(float spinAngle = 0.0f);
 private:
+    //version
+    const std::string m_version = "v0.7.3";
+
+    //icon
+    SDL_Surface* m_app_icon = nullptr;
+
     //final volumes
     int m_finalMusicVolume=100;
     int m_finalHitsoundVolume=50;
@@ -191,7 +222,7 @@ private:
     Skins m_skins;
 
     std::vector<HitError> m_hitErrors;
-    //DiscordRPC m_discordRPC;
+    DiscordRPC m_discordRPC;
 
     SDL_Texture* m_menuBgTexture = nullptr;
     int m_lastBgSong = -1;
@@ -207,4 +238,21 @@ private:
 
     //gamemodes
     bool m_noFail=false;
+
+    //scores
+    std::vector<ScoreEntry> m_scores;
+    int m_activeScoreTab=0;
+    int m_scoreScroll=0;
+    std::map<std::string, std::vector<ScoreEntry>> m_scoreCache;
+
+    //gameplay score display
+    std::vector<GameplayScoreRow> m_gameplayScoreRows;
+    bool  m_showGameplayScores = false;
+    float m_gameplayScoresAlpha = 0.0f;
+    float m_gameplayScoresTimer = 2000.0f;
+
+    //end map timers
+    float m_lastNoteTime = 0.0f;
+    float m_mapEndTimer = -1.0f;
+    float m_mapFadeAlpha = 0.0f;
 };

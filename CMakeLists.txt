@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(Lonkstalk VERSION 1.0 LANGUAGES C CXX)
+project(VLBeats VERSION 1.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(Lonkstalk
+add_executable(VLBeats MACOSX_BUNDLE
     core/main.cpp
     core/Game.cpp
     core/Window.cpp
@@ -14,12 +14,13 @@ add_executable(Lonkstalk
     gameplay/Skins.cpp
     deps/miniz.c
     deps/sqlite3.c
-    # utils/DiscordRPC.cpp
+    utils/DiscordRPC.cpp
     utils/Hash.cpp
     utils/Database.cpp
     utils/DebugOverlay.cpp
     utils/Settings.cpp
 )
+configure_file(${CMAKE_SOURCE_DIR}/app_icon.png ${CMAKE_BINARY_DIR}/app_icon.png COPYONLY)
 
 add_executable(LKPacker
     tools/LKPacker/lkpacker.cpp
@@ -52,7 +53,7 @@ find_package(SDL2_ttf REQUIRED CONFIG)
 
 find_package(SDL2_gfx CONFIG QUIET)
 
-target_link_libraries(Lonkstalk PRIVATE
+target_link_libraries(VLBeats PRIVATE
     SDL2::SDL2main
     SDL2::SDL2
     SDL2_image::SDL2_image
@@ -61,28 +62,39 @@ target_link_libraries(Lonkstalk PRIVATE
 )
 
 if(NOT WIN32)
-    target_link_libraries(Lonkstalk PRIVATE pthread dl)
+    target_link_libraries(VLBeats PRIVATE pthread dl)
 endif()
 
 if(APPLE)
-    target_include_directories(Lonkstalk PRIVATE /opt/homebrew/include /usr/local/include)
+    target_include_directories(VLBeats PRIVATE /opt/homebrew/include /usr/local/include)
+    set(MACOSX_BUNDLE_ICON_FILE "icon.icns")
+    set_source_files_properties(${CMAKE_SOURCE_DIR}/icon.icns PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+    target_sources(VLBeats PRIVATE ${CMAKE_SOURCE_DIR}/icon.icns)
     target_include_directories(LKPacker PRIVATE /opt/homebrew/include /usr/local/include)
 endif()
 
-if(TARGET SDL2_gfx::SDL2_gfx)
-    target_link_libraries(Lonkstalk PRIVATE SDL2_gfx::SDL2_gfx)
+if(UNIX AND NOT APPLE)
+    install(FILES lonkstalk.desktop DESTINATION share/applications)
+    install(FILES icon.png DESTINATION share/icons/hicolor/128x128/apps)
 endif()
 
-# find_library(DISCORD_RPC_LIB
-#     NAMES discord-rpc
-# )
+if(TARGET SDL2_gfx::SDL2_gfx)
+    target_link_libraries(VLBeats PRIVATE SDL2_gfx::SDL2_gfx)
+endif()
 
-# if(DISCORD_RPC_LIB)
-#     target_link_libraries(Lonkstalk PRIVATE ${DISCORD_RPC_LIB})
-# endif()
+find_library(DISCORD_RPC_LIB
+    NAMES discord-rpc
+)
+
+if(DISCORD_RPC_LIB)
+    target_link_libraries(VLBeats PRIVATE ${DISCORD_RPC_LIB})
+endif()
 
 target_compile_features(LKPacker PRIVATE cxx_std_17)
 
 if(WIN32)
-    target_compile_definitions(Lonkstalk PRIVATE _CRT_SECURE_NO_WARNINGS)
+    target_compile_definitions(VLBeats PRIVATE _CRT_SECURE_NO_WARNINGS)
+    set(APP_ICON_RESOURCE "${CMAKE_BINARY_DIR}/app_icon.rc")
+    file(WRITE ${APP_ICON_RESOURCE} "IDI_ICON1 ICON \"${CMAKE_SOURCE_DIR}/icon.ico\"")
+    target_sources(VLBeats PRIVATE ${APP_ICON_RESOURCE})
 endif()
