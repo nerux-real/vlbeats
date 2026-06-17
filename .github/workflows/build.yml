@@ -28,19 +28,19 @@ jobs:
             mingw-w64-x86_64-make
             mingw-w64-x86_64-git
 
-      - name: Build Discord RPC (Windows)
-        shell: msys2 {0}
-        run: |
-          git clone https://github.com/discord/discord-rpc.git
-          cd discord-rpc
-          mkdir build && cd build
-          cmake .. -G "MinGW Makefiles" -DBUILD_SHARED_LIBS=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5
-          mingw32-make
-          mingw32-make install
+      # - name: Build Discord RPC (Windows)
+      #   shell: msys2 {0}
+      #   run: |
+      #     git clone https://github.com/discord/discord-rpc.git
+      #     cd discord-rpc
+      #     mkdir build && cd build
+      #     cmake .. -G "MinGW Makefiles" -DBUILD_SHARED_LIBS=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+      #     mingw32-make
+      #     mingw32-make install
 
-          if [ -d /mingw64/include/discord-rpc ]; then
-            mv /mingw64/include/discord-rpc /mingw64/include/DiscordRPC
-          fi
+      #     if [ -d /mingw64/include/discord-rpc ]; then
+      #       mv /mingw64/include/discord-rpc /mingw64/include/DiscordRPC
+      #     fi
 
       - name: Configure
         shell: msys2 {0}
@@ -89,7 +89,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y cmake build-essential libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libdiscord-rpc-dev
+          sudo apt install -y cmake build-essential libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev
 
       - name: Configure
         run: |
@@ -130,18 +130,18 @@ jobs:
         run: |
           brew install cmake sdl2 sdl2_image sdl2_mixer sdl2_ttf
 
-      - name: Build Discord RPC (macOS)
-        run: |
-          git clone https://github.com/discord/discord-rpc.git
-          cd discord-rpc
-          mkdir build && cd build
-          cmake .. -DBUILD_SHARED_LIBS=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5
-          make -j4
-          sudo make install
+      # - name: Build Discord RPC (macOS)
+      #   run: |
+      #     git clone https://github.com/discord/discord-rpc.git
+      #     cd discord-rpc
+      #     mkdir build && cd build
+      #     cmake .. -DBUILD_SHARED_LIBS=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+      #     make -j4
+      #     sudo make install
 
-          if [ -d /usr/local/include/discord-rpc ]; then
-            sudo mv /usr/local/include/discord-rpc /usr/local/include/DiscordRPC
-          fi
+      #     if [ -d /usr/local/include/discord-rpc ]; then
+      #       sudo mv /usr/local/include/discord-rpc /usr/local/include/DiscordRPC
+      #     fi
 
       - name: Configure
         run: |

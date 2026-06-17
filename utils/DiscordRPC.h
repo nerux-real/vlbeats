@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
-#include <DiscordRPC/discord_rpc.h>
+// #include <DiscordRPC/discord_rpc.h>
+#include "../deps/discord-rpc.hpp"
 
 class DiscordRPC {
 public:

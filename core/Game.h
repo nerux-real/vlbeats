@@ -13,7 +13,7 @@
 #include "../gameplay/ParticleSystem.h"
 #include "../utils/Settings.h"
 #include "../gameplay/Skins.h"
-#include "../utils/DiscordRPC.h"
+// #include "../utils/DiscordRPC.h"
 #include "../utils/Hash.h"
 #include "../utils/Database.h"
 #include <atomic>
@@ -222,7 +222,7 @@ private:
     Skins m_skins;
 
     std::vector<HitError> m_hitErrors;
-    DiscordRPC m_discordRPC;
+    // DiscordRPC m_discordRPC;
 
     SDL_Texture* m_menuBgTexture = nullptr;
     int m_lastBgSong = -1;

@@ -1,26 +1,30 @@
 #include "DiscordRPC.h"
 #include <iostream>
 
-void DiscordRPC::init(const char* appId){
-    DiscordEventHandlers handlers = {};
-    Discord_Initialize(appId, &handlers, 1, nullptr);
-    std::cout << "Discord RPC initialized\n";
+void initRPC() {
+    auto& rpc = discord::RPCManager::get();
+
+    rpc.setClientID("YOUR_APP_ID")
+       .onReady([](discord::User const& user){
+           std::cout << "RPC Ready: " << user.username << "\n";
+       })
+       .onErrored([](int code, std::string_view msg){
+           std::cout << "RPC Error " << code << ": " << msg << "\n";
+       })
+       .initialize();
 }
 
-void DiscordRPC::update(const std::string& state, const std::string& details, const std::string& largeImageKey){
-    DiscordRichPresence presence = {};
-    presence.state   = state.c_str();
-    presence.details = details.c_str();
-    if(!largeImageKey.empty())
-        presence.largeImageKey = largeImageKey.c_str();
-    presence.startTimestamp = time(nullptr);
-    Discord_UpdatePresence(&presence);
+void updateRPC() {
+    auto& rpc = discord::RPCManager::get();
+    auto& presence = rpc.getPresence();
+
+    presence.state = "Playing";
+    presence.details = "In a match";
+    presence.largeImageKey = "logo";
+
+    rpc.refresh();
 }
 
-void DiscordRPC::shutdown(){
-    Discord_Shutdown();
-}
-
-void DiscordRPC::runCallbacks(){
-    Discord_RunCallbacks();
+void shutdownRPC() {
+    discord::RPCManager::get().shutdown();
 }

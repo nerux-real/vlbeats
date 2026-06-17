@@ -14,7 +14,7 @@ add_executable(VLBeats MACOSX_BUNDLE
     gameplay/Skins.cpp
     deps/miniz.c
     deps/sqlite3.c
-    utils/DiscordRPC.cpp
+    # utils/DiscordRPC.cpp
     utils/Hash.cpp
     utils/Database.cpp
     utils/DebugOverlay.cpp
@@ -80,14 +80,6 @@ endif()
 
 if(TARGET SDL2_gfx::SDL2_gfx)
     target_link_libraries(VLBeats PRIVATE SDL2_gfx::SDL2_gfx)
-endif()
-
-find_library(DISCORD_RPC_LIB
-    NAMES discord-rpc
-)
-
-if(DISCORD_RPC_LIB)
-    target_link_libraries(VLBeats PRIVATE ${DISCORD_RPC_LIB})
 endif()
 
 target_compile_features(LKPacker PRIVATE cxx_std_17)

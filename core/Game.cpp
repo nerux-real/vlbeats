@@ -762,8 +762,8 @@ bool Game::init(){
     if(m_settings.debug) m_debug.hook();
 
     m_database.init("./scores.db");
-    m_discordRPC.init("1515437675111387178");
-    m_discordRPC.update("In Menus", "Browsing songs");
+    //m_discordRPC.init("1515437675111387178");
+    //m_discordRPC.update("In Menus", "Browsing songs");
     m_lastTick = SDL_GetPerformanceCounter();
 
     std::atomic<bool> scanDone{false};
@@ -858,10 +858,10 @@ void Game::startGame(const std::string &path, const std::string &difficulty){
             m_lastNoteTime = end;
     }
 
-    m_discordRPC.update(
-        m_beatmap.name + " [" + difficulty + "]",
-        "Playing"
-    );
+    // m_discordRPC.update(
+    //     m_beatmap.name + " [" + difficulty + "]",
+    //     "Playing"
+    // );
 
     if(m_previewPlaying){
         Mix_FadeOutMusic(300);
@@ -1822,10 +1822,10 @@ void Game::endMap(){
             Mix_PlayChannel(1, m_skins.getActive().game_fail, 0);
     }
 
-    m_discordRPC.update(
-        m_beatmap.name + " [" + m_songList[m_selectedSong].difficulties[m_selectedDifficulty] + "]",
-        std::to_string(accInt) + "% - " + grade + " Grade"
-    );
+    // m_discordRPC.update(
+    //     m_beatmap.name + " [" + m_songList[m_selectedSong].difficulties[m_selectedDifficulty] + "]",
+    //     std::to_string(accInt) + "% - " + grade + " Grade"
+    // );
     m_showGameplayScores = false;
     m_state = GameState::Results;
 }
@@ -1923,7 +1923,7 @@ void Game::run(){
         }
 
         m_debug.render(renderer);
-        m_discordRPC.runCallbacks();
+        //m_discordRPC.runCallbacks();
         renderFPSCounter();
         renderVolumeBar();
         SDL_RenderPresent(renderer);
@@ -1946,11 +1946,11 @@ void Game::backToSongSelect(){
     m_displayPoints = 0.0f;
     m_hitErrors.clear();
     m_state = GameState::SongSelectMenu;
-    m_discordRPC.update("In Menus", "Browsing songs");
+    //m_discordRPC.update("In Menus", "Browsing songs");
 }
 
 void Game::shutdown(){
-    m_discordRPC.shutdown();
+    //m_discordRPC.shutdown();
     m_settings.save("./settings.ini");
     for (auto& [key, entries] : m_scoreCache)
         for (auto& sc : entries)
