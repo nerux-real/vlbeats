@@ -33,11 +33,10 @@ jobs:
           git clone https://github.com/discord/discord-rpc.git
           cd discord-rpc
           mkdir build && cd build
-          cmake .. -G "MinGW Makefiles" -DBUILD_SHARED_LIBS=ON
+          cmake .. -G "MinGW Makefiles" -DBUILD_SHARED_LIBS=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5
           mingw32-make
           mingw32-make install
 
-          # Fix include path to match your #include <DiscordRPC/...>
           if [ -d /mingw64/include/discord-rpc ]; then
             mv /mingw64/include/discord-rpc /mingw64/include/DiscordRPC
           fi
@@ -135,11 +134,10 @@ jobs:
           git clone https://github.com/discord/discord-rpc.git
           cd discord-rpc
           mkdir build && cd build
-          cmake .. -DBUILD_SHARED_LIBS=ON
+          cmake .. -DBUILD_SHARED_LIBS=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5
           make -j4
           sudo make install
 
-          # Fix include path to match your #include <DiscordRPC/...>
           if [ -d /usr/local/include/discord-rpc ]; then
             sudo mv /usr/local/include/discord-rpc /usr/local/include/DiscordRPC
           fi
